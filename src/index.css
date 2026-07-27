@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; min-width: 320px; overflow-x: hidden; background: #FFF9FC; color: #2B1524; font-family: Manrope, sans-serif; transition: background-color .35s ease, color .35s ease; }
+  .dark body { background: #24101D; color: #FFF7FB; }
+  ::selection { background: #F8B8D1; color: #2B1524; }
+  img { display: block; }
+  button, a, input, textarea, select { outline-offset: 3px; }
+  button { cursor: pointer; }
+}
+
+@layer components {
+  .knit-texture {
+    background-image:
+      radial-gradient(circle at 20% 20%, rgb(255 255 255 / .5) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 80% 80%, rgb(232 79 138 / .2) 0 1px, transparent 1.5px);
+    background-size: 14px 14px;
+  }
+
+  .admin-content > * {
+    animation: admin-fade-in .35s ease both;
+  }
+
+  .admin-content .bg-white {
+    border: 1px solid rgb(236 72 134 / .1);
+    border-radius: 1.5rem;
+    box-shadow: 0 14px 45px rgb(100 27 59 / .07);
+  }
+
+  .admin-content input,
+  .admin-content textarea,
+  .admin-content select {
+    border-color: #f0cad9;
+    border-radius: .9rem;
+    background-color: #fffafd;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+
+  .admin-content input:focus,
+  .admin-content textarea:focus,
+  .admin-content select:focus {
+    border-color: #e84f8a;
+    box-shadow: 0 0 0 4px rgb(232 79 138 / .1);
+    outline: none;
+  }
+
+  .admin-content table thead {
+    color: #a64167;
+  }
+
+  .admin-content table tbody tr {
+    transition: background-color .2s ease;
+  }
+
+  .admin-content table tbody tr:hover {
+    background-color: #fff3f8;
+  }
+
+  .admin-content table td,
+  .admin-content table th {
+    padding-left: .75rem;
+    padding-right: .75rem;
+  }
+
+  .dark .admin-content .bg-white {
+    border-color: rgb(255 255 255 / .08);
+    background-color: #321322;
+    box-shadow: 0 14px 45px rgb(0 0 0 / .16);
+  }
+
+  .dark .admin-content input,
+  .dark .admin-content textarea,
+  .dark .admin-content select {
+    border-color: rgb(255 255 255 / .12);
+    background-color: #28101c;
+  }
+
+  .dark .admin-content table tbody tr:hover {
+    background-color: rgb(255 255 255 / .035);
+  }
+}
+
+@keyframes admin-fade-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer utilities {
+  html:not(.dark) .bg-white,
+  html:not(.dark) .bg-ivory,
+  html:not(.dark) .bg-mist,
+  html:not(.dark) .bg-linen,
+  html:not(.dark) .bg-sand {
+    color: #2B1524;
+  }
+  .dark .bg-ivory,
+  .dark .bg-ivory\/95,
+  .dark .bg-ivory\/90 { background-color: #24101D; }
+  .dark .bg-white { background-color: #351527; }
+  .dark .bg-mist { background-color: #3C172C; }
+  .dark .bg-linen { background-color: #501A35; }
+  .dark .bg-sand { background-color: #9E2F62; }
+  .dark .bg-ink { background-color: #190A13; }
+  .dark .text-black\/40,
+  .dark .text-black\/45,
+  .dark .text-black\/50,
+  .dark .text-black\/55,
+  .dark .text-black\/60,
+  .dark .text-black\/65 { color: rgb(255 239 245 / .68); }
+  .dark .border-black\/5,
+  .dark .border-black\/15,
+  .dark .border-black\/20 { border-color: rgb(255 255 255 / .14); }
+  .dark input,
+  .dark textarea,
+  .dark select { color: #FFF7FB; background-color: #351527; }
+}
