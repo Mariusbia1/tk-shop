@@ -5,6 +5,7 @@ import {
   FileText, Settings, User, LogOut, Search, Bell, Menu, X, ChevronRight,
 } from 'lucide-react'
 import { useAdminAuth } from '../contexts/AdminAuthContext'
+import InstallAppButton from '../components/common/InstallAppButton'
 
 const nav = [
   ['/admin', LayoutDashboard, 'Tableau de bord'],
@@ -118,6 +119,7 @@ export default function AdminLayout() {
               <Search className="h-4 w-4 text-[#d84b7f]" />
               <input placeholder="Rechercher dans l’administration" className="w-full bg-transparent text-xs outline-none" />
             </label>
+            <InstallAppButton compact manifestHref="/admin-manifest.webmanifest" label="Installer Marlène Admin" />
             <button className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#f3d2df] bg-white dark:border-white/10 dark:bg-white/5" aria-label="Notifications">
               <Bell className="h-4 w-4" />
               <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-[#ef4f8b]" />
