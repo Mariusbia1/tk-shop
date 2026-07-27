@@ -11,6 +11,6 @@ export default function ProductCard({ product }) {
       <button aria-label="Ajouter aux favoris" className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/90"><Heart className="h-4 w-4" /></button>
       <button onClick={() => canQuickAdd ? addItem(product) : null} className="absolute bottom-3 left-3 right-3 flex translate-y-14 items-center justify-center gap-2 rounded-full bg-plum/90 py-3 text-xs font-semibold text-white backdrop-blur transition group-hover:translate-y-0">{canQuickAdd ? <><Plus className="h-4 w-4" /> Ajouter au panier</> : <Link to={`/collections/${product.slug}`}>Choisir les options</Link>}</button>
     </div>
-    <div className="px-2 pb-3 pt-4"><p className="text-[10px] font-bold uppercase tracking-[.16em] text-gold">{product.category} en maille</p><Link to={`/collections/${product.slug}`} className="mt-1 block font-display text-xl">{product.name}</Link><p className="mt-1 text-sm font-semibold text-gold">{formatCurrency(product.price)}</p></div>
+    <div className="px-2 pb-3 pt-4"><p className="text-[10px] font-bold uppercase tracking-[.16em] text-gold">{product.category} au crochet</p><Link to={`/collections/${product.slug}`} className="mt-1 block font-display text-xl">{product.name}</Link><p className="mt-1 text-sm font-semibold text-gold">{formatCurrency(product.price)}</p></div>
   </article>
 }

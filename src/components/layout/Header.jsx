@@ -25,6 +25,6 @@ export default function Header() {
         </div>
       </div>
     </header>
-    {open && <div className="fixed inset-0 z-50 bg-ivory p-6 dark:bg-plum lg:hidden"><div className="flex items-center justify-between"><span className="font-display text-2xl">Marlène Shop</span><button onClick={() => setOpen(false)} aria-label="Fermer"><X /></button></div><p className="mt-12 text-xs font-bold uppercase tracking-[.25em] text-gold">La maille faite avec amour</p><nav className="mt-8 grid gap-6">{links.map(([to, label]) => <Link className="font-display text-3xl" onClick={() => setOpen(false)} key={to} to={to}>{label}</Link>)}</nav></div>}
+    {open && <div className="fixed inset-0 z-50 bg-ivory p-6 dark:bg-plum lg:hidden"><div className="flex items-center justify-between"><span className="font-display text-2xl">Marlène Shop</span><button onClick={() => setOpen(false)} aria-label="Fermer"><X /></button></div><p className="mt-12 text-xs font-bold uppercase tracking-[.25em] text-gold">Le crochet fait avec amour</p><nav className="mt-8 grid gap-6">{links.map(([to, label]) => <Link className="font-display text-3xl" onClick={() => setOpen(false)} key={to} to={to}>{label}</Link>)}</nav></div>}
   </>
 }

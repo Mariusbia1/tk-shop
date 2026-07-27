@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'Marlène Shop',
-  slogan: 'L’élégance tissée à la main.',
-  description: 'Marlène Shop imagine des pièces en tricot et en maille, uniques, élégantes et personnalisables, réalisées à la main pour révéler chaque femme.',
+  slogan: 'L’élégance crochetée à la main.',
+  description: 'Marlène Shop imagine des pièces en crochet uniques, élégantes et personnalisables, réalisées point après point à la main pour révéler chaque femme.',
   whatsapp: '2290100000000',
   phone: '+229 01 00 00 00 00',
   email: 'bonjour@marleneshop.com',
