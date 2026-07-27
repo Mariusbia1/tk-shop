@@ -4,8 +4,13 @@ import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 export default function PublicLayout() {
   const { pathname } = useLocation()
+  const isMobileCart = pathname === '/panier'
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
-  return <><Header /><main><Outlet /></main><Footer /></>
+  return <>
+    <div className={isMobileCart ? 'hidden md:block' : ''}><Header /></div>
+    <main><Outlet /></main>
+    <div className={isMobileCart ? 'hidden md:block' : ''}><Footer /></div>
+  </>
 }

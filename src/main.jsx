@@ -13,3 +13,9 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><ErrorBoundary><ThemeProvider><HelmetProvider><BrowserRouter><AdminAuthProvider><CartProvider><App/><Toaster position="bottom-right" toastOptions={{style:{borderRadius:18,fontFamily:'Manrope'}}}/></CartProvider></AdminAuthProvider></BrowserRouter></HelmetProvider></ThemeProvider></ErrorBoundary></React.StrictMode>
 )
+
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+  })
+}
