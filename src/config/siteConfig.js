@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: 'Atelier Naya',
+  name: 'Marlène Shop',
   slogan: 'L’élégance tissée à la main.',
-  description: 'Atelier Naya imagine des pièces en tricot et en maille, uniques, élégantes et personnalisables, réalisées à la main pour révéler chaque femme.',
+  description: 'Marlène Shop imagine des pièces en tricot et en maille, uniques, élégantes et personnalisables, réalisées à la main pour révéler chaque femme.',
   whatsapp: '2290100000000',
   phone: '+229 01 00 00 00 00',
-  email: 'bonjour@ateliernaya.com',
+  email: 'bonjour@marleneshop.com',
   address: 'Cotonou, Bénin',
   instagram: 'https://instagram.com',
   facebook: 'https://facebook.com',

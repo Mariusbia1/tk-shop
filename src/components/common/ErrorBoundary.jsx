@@ -8,7 +8,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    console.error('Erreur de rendu Atelier Naya :', error)
+    console.error('Erreur de rendu Marlène Shop :', error)
   }
 
   render() {
@@ -16,7 +16,7 @@ export default class ErrorBoundary extends Component {
       return (
         <main className="grid min-h-screen place-items-center bg-ivory px-5 text-center">
           <div>
-            <p className="font-display text-4xl">Atelier Naya</p>
+            <p className="font-display text-4xl">Marlène Shop</p>
             <h1 className="mt-6 font-display text-3xl">La page n’a pas pu s’afficher.</h1>
             <p className="mt-3 text-sm text-black/55">
               Actualisez la page pour reprendre votre visite.

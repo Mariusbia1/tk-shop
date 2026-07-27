@@ -30,7 +30,7 @@ function SidebarContent({ onNavigate }) {
   return <>
     <div className="flex h-24 items-center border-b border-white/10 px-6">
       <div>
-        <p className="font-display text-2xl text-white">Atelier Naya</p>
+        <p className="font-display text-2xl text-white">Marlène Shop</p>
         <p className="mt-1 text-[9px] font-bold uppercase tracking-[.28em] text-[#ff9fc3]">Espace administration</p>
       </div>
     </div>
@@ -63,9 +63,9 @@ function SidebarContent({ onNavigate }) {
     <div className="mt-auto p-4">
       <div className="mb-3 rounded-2xl border border-white/10 bg-white/5 p-3">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#ff9fc3] to-[#ef4f8b] font-display text-lg text-white">N</div>
+          <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#ff9fc3] to-[#ef4f8b] font-display text-lg text-white">M</div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">Naya</p>
+            <p className="truncate text-sm font-semibold text-white">Marlène</p>
             <p className="truncate text-[10px] text-white/45">Administratrice</p>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function AdminLayout() {
               <Menu className="h-5 w-5" />
             </button>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#d84b7f]">Atelier Naya</p>
+              <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#d84b7f]">Marlène Shop</p>
               <h1 className="font-display text-xl sm:text-2xl">{current}</h1>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function AdminLayout() {
               <Bell className="h-4 w-4" />
               <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-[#ef4f8b]" />
             </button>
-            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#ff9fc3] to-[#e84f8a] font-display text-lg text-white shadow-md">N</div>
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#ff9fc3] to-[#e84f8a] font-display text-lg text-white shadow-md">M</div>
           </div>
         </header>
 
