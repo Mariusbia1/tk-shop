@@ -124,7 +124,7 @@ export default function AdminLayout() {
         </div>
       )}
 
-      <div className="min-h-screen lg:pl-[272px]">
+      <div className="min-h-screen min-w-0 overflow-x-hidden lg:pl-[272px]">
         <header className="admin-topbar sticky top-0 z-30 flex h-20 items-center justify-between border-b border-[#e2d4b3] bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8 dark:border-white/10 dark:bg-[#241d0e]/90">
           <div className="flex items-center gap-3">
             <button onClick={() => setMobileOpen(true)} className="grid h-11 w-11 place-items-center rounded-2xl bg-[#faf5ea] text-[#96701c] lg:hidden" aria-label="Ouvrir le menu">
@@ -150,7 +150,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="admin-content p-4 sm:p-6 lg:p-8">
+        <main className="admin-content min-w-0 max-w-full overflow-x-hidden p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
