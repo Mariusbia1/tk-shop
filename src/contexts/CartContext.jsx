@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { siteConfig } from '../config/siteConfig'
+import { useCatalog } from './CatalogContext'
 
 const CartContext = createContext(null)
 const keyFor = (product, options) => [product.id, options.size, options.color, options.measurements, options.note].join('|')
 
 export function CartProvider({ children }) {
+  const { settings } = useCatalog()
   const [items, setItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('atelier-naya-cart')) || [] } catch { return [] }
   })
@@ -26,7 +28,7 @@ export function CartProvider({ children }) {
   const clearCart = () => setItems([])
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const deliveryFee = items.length ? siteConfig.deliveryFee : 0
+  const deliveryFee = items.length ? Number(settings?.delivery_fee ?? siteConfig.deliveryFee) : 0
   const total = subtotal + deliveryFee
   const value = useMemo(() => ({ items, addItem, updateQuantity, removeItem, clearCart, itemCount, subtotal, deliveryFee, total }), [items, itemCount, subtotal, deliveryFee, total])
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

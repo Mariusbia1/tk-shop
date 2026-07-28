@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Shapes, ShoppingCart, Images, Quote,
@@ -6,6 +6,8 @@ import {
 } from 'lucide-react'
 import { useAdminAuth } from '../contexts/AdminAuthContext'
 import InstallAppButton from '../components/common/InstallAppButton'
+import toast from 'react-hot-toast'
+import { supabase } from '../lib/supabase'
 
 const nav = [
   ['/admin', LayoutDashboard, 'Tableau de bord'],
@@ -85,8 +87,24 @@ function SidebarContent({ onNavigate }) {
 
 export default function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [newOrders, setNewOrders] = useState(0)
   const { pathname } = useLocation()
   const current = nav.find(([to]) => to === pathname)?.[2] || 'Administration'
+
+  useEffect(() => {
+    if (!supabase) return undefined
+    const channel = supabase.channel('admin-new-orders')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, ({ new: order }) => {
+        setNewOrders((count) => count + 1)
+        toast.success(`Nouvelle commande ${order.order_number || ''}`, { duration: 7000 })
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Nouvelle commande TK SHOP', { body: `${order.customer_name} vient de passer une commande.` })
+        }
+      })
+      .subscribe()
+    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission()
+    return () => { supabase.removeChannel(channel) }
+  }, [])
 
   return (
     <div className="admin-shell min-h-screen bg-[#faf5ea] text-ink dark:bg-[#17140f]">
@@ -124,10 +142,10 @@ export default function AdminLayout() {
               <input placeholder="Rechercher dans l’administration" className="w-full bg-transparent text-xs outline-none" />
             </label>
             <InstallAppButton compact manifestHref="/admin-manifest.webmanifest" label="Installer TK Admin" />
-            <button className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#e3d3ad] bg-white dark:border-white/10 dark:bg-white/5" aria-label="Notifications">
+            <Link to="/admin/commandes" onClick={()=>setNewOrders(0)} className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#e3d3ad] bg-white dark:border-white/10 dark:bg-white/5" aria-label={`${newOrders} nouvelles commandes`}>
               <Bell className="h-4 w-4" />
-              <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border-2 border-white bg-[#b88b22]" />
-            </button>
+              {newOrders>0&&<span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#b88b22] px-1 text-[9px] font-bold text-white">{newOrders}</span>}
+            </Link>
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#d7b65e] to-[#B38A2C] font-display text-xs font-bold text-white shadow-md">TK</div>
           </div>
         </header>

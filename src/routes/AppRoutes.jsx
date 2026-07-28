@@ -8,7 +8,7 @@ import ProductPage from '../pages/public/ProductPage'
 import CartPage from '../pages/public/CartPage'
 import CheckoutPage from '../pages/public/CheckoutPage'
 import { AboutPage, GalleryPage, ContactPage, FaqPage, ConfirmationPage, LegalPage } from '../pages/public/ContentPages'
-import { LoginPage, ProtectedAdminRoute, DashboardPage, ProductsAdmin, ProductFormPage, OrdersAdmin, OrderDetail, SimpleAdminPage } from '../pages/admin/AdminPages'
+import { LoginPage, ProtectedAdminRoute, DashboardPage, ProductsAdmin, ProductFormPage, CategoriesAdmin, OrdersAdmin, OrderDetail, SimpleAdminPage } from '../pages/admin/AdminPages'
 import Button from '../components/common/Button'
 
 const Category = () => { const { slug } = useParams(); return <ShopPage categorySlug={slug}/> }
@@ -42,7 +42,7 @@ export default function AppRoutes(){
       <Route path="produits" element={<ProductsAdmin/>}/>
       <Route path="produits/nouveau" element={<ProductFormPage/>}/>
       <Route path="produits/:id/modifier" element={<ProductFormPage/>}/>
-      <Route path="categories" element={<SimpleAdminPage title="Catégories"/>}/>
+      <Route path="categories" element={<CategoriesAdmin/>}/>
       <Route path="commandes" element={<OrdersAdmin/>}/>
       <Route path="commandes/:id" element={<OrderDetail/>}/>
       <Route path="galerie" element={<SimpleAdminPage title="Galerie" type="gallery"/>}/>

@@ -5,24 +5,24 @@ import SEO from '../../components/common/SEO'
 import Button from '../../components/common/Button'
 import ProductCard from '../../components/products/ProductCard'
 import Accordion from '../../components/common/Accordion'
-import { products } from '../../data/products'
-import { categories } from '../../data/categories'
-import { testimonials } from '../../data/testimonials'
+import { useCatalog } from '../../contexts/CatalogContext'
 import { faq } from '../../data/faq'
 import heroCrochet from '../../assets/hero-crochet-gold.jpg'
 
 const SectionTitle = ({ eyebrow, children }) => <div className="mb-10 text-center"><p className="mb-3 text-[11px] font-bold uppercase tracking-[.22em] text-gold">{eyebrow}</p><h2 className="font-display text-4xl md:text-5xl">{children}</h2></div>
 
 export default function HomePage() {
+  const { products, categories, testimonials, content } = useCatalog()
+  const hero = content.hero || {}
   return <><SEO title="TK SHOP | Créations crochetées à la main" />
     <section className="relative min-h-[82vh] overflow-hidden bg-gradient-to-br from-[#fffcf5] via-linen to-[#ebdbb4] dark:from-plum dark:via-[#3b2e14] dark:to-[#20190d]">
       <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#cfa746]/35 blur-3xl" />
       <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#dfc57f]/55 blur-3xl" />
       <div className="relative mx-auto grid min-h-[82vh] max-w-7xl items-center gap-10 px-5 py-12 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="relative z-10">
-          <span className="inline-flex rounded-full border border-gold/30 bg-white/75 px-4 py-2 text-[10px] font-bold uppercase tracking-[.24em] text-gold shadow-sm backdrop-blur dark:bg-white/10">Crochet d’exception · Fait main</span>
-          <h1 className="mt-7 font-display text-5xl leading-[1.02] sm:text-7xl">La douceur<br /><span className="italic text-gold">prend forme.</span></h1>
-          <p className="mt-6 max-w-lg text-base leading-8 text-black/60">Des pièces en crochet singulières, façonnées point après point à la main pour envelopper chaque femme d’élégance et de douceur.</p>
+          <span className="inline-flex rounded-full border border-gold/30 bg-white/75 px-4 py-2 text-[10px] font-bold uppercase tracking-[.24em] text-gold shadow-sm backdrop-blur dark:bg-white/10">{hero.eyebrow||'Crochet d’exception · Fait main'}</span>
+          <h1 className="mt-7 font-display text-5xl leading-[1.02] sm:text-7xl">{hero.title||'La douceur prend forme.'}</h1>
+          <p className="mt-6 max-w-lg text-base leading-8 text-black/60">{hero.description||'Des pièces en crochet singulières, façonnées point après point à la main pour envelopper chaque femme d’élégance et de douceur.'}</p>
           <div className="mt-8 flex flex-wrap gap-3"><Button to="/collections">Découvrir le crochet</Button><Button to="/contact" variant="outline">Imaginer ma pièce</Button></div>
           <div className="mt-10 flex gap-8 text-xs text-black/50"><span><b className="block font-display text-2xl text-gold">100%</b>fait main</span><span><b className="block font-display text-2xl text-gold">12</b>pièces signatures</span><span><b className="block font-display text-2xl text-gold">1</b>pièce unique</span></div>
         </motion.div>

@@ -1,2 +1,3 @@
 import AppRoutes from './routes/AppRoutes'
-export default function App(){ return <AppRoutes/> }
+import TrafficTracker from './components/common/TrafficTracker'
+export default function App(){ return <><TrafficTracker/><AppRoutes/></> }
