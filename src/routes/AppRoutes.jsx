@@ -16,7 +16,7 @@ const LegacyProduct = () => { const { slug } = useParams(); return <Navigate to=
 const NotFound = () => <div className="grid min-h-[60vh] place-items-center px-5 text-center"><div><p className="font-display text-8xl text-linen">404</p><h1 className="font-display text-4xl">Cette page n’existe pas</h1><Button to="/" className="mt-7">Retour à l’accueil</Button></div></div>
 
 export default function AppRoutes(){
-  return <Suspense fallback={<div className="grid min-h-screen place-items-center font-display text-2xl">Marlène Shop</div>}><Routes>
+  return <Suspense fallback={<div className="grid min-h-screen place-items-center font-display text-2xl">TK SHOP</div>}><Routes>
     <Route element={<PublicLayout/>}>
       <Route path="/" element={<HomePage/>}/>
       <Route path="/boutique" element={<Navigate to="/collections" replace/>}/>

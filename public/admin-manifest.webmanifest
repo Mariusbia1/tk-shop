@@ -1,13 +1,13 @@
 {
   "id": "/admin/",
-  "name": "Marlène Shop Admin",
-  "short_name": "Marlène Admin",
-  "description": "Administration de la boutique Marlène Shop.",
+  "name": "TK SHOP Admin",
+  "short_name": "TK Admin",
+  "description": "Administration de la boutique TK SHOP.",
   "start_url": "/admin/",
   "scope": "/admin/",
   "display": "standalone",
-  "background_color": "#FFF3F8",
-  "theme_color": "#50172F",
+  "background_color": "#faf5ea",
+  "theme_color": "#302712",
   "orientation": "portrait-primary",
   "icons": [
     {

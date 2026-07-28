@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 
 export default function InstallAppButton({
   compact = false,
-  label = 'Installer Marlène Shop',
+  label = 'Installer TK SHOP',
   manifestHref = '/manifest.webmanifest',
 }) {
   const [installPrompt, setInstallPrompt] = useState(null)
@@ -57,7 +57,7 @@ export default function InstallAppButton({
       onClick={install}
       className={compact
         ? 'grid h-10 w-10 place-items-center rounded-full bg-mist text-gold'
-        : 'flex w-full items-center justify-center gap-2 rounded-2xl border border-rose/25 bg-white px-4 py-3 text-sm font-semibold text-gold shadow-sm dark:bg-white/5'
+        : 'flex w-full items-center justify-center gap-2 rounded-2xl border border-goldSoft/25 bg-white px-4 py-3 text-sm font-semibold text-gold shadow-sm dark:bg-white/5'
       }
       aria-label={label}
     >

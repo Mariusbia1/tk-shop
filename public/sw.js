@@ -1,4 +1,4 @@
-const CACHE = 'marlene-shop-v1'
+const CACHE = 'tk-shop-v2'
 const APP_SHELL = ['/', '/manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', (event) => {

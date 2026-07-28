@@ -1,12 +1,12 @@
 {
-  "name": "Marlène Shop",
-  "short_name": "Marlène",
+  "name": "TK SHOP",
+  "short_name": "TK",
   "description": "Créations artisanales au crochet, réalisées à la main.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#FFF9FC",
-  "theme_color": "#E84F8A",
+  "background_color": "#FFFEFA",
+  "theme_color": "#B38A2C",
   "orientation": "portrait-primary",
   "icons": [
     {
