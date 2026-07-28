@@ -1,5 +1,5 @@
 const CACHE = 'tk-shop-v2'
-const APP_SHELL = ['/', '/manifest.webmanifest', '/app-icon.svg']
+const APP_SHELL = ['/', '/manifest.webmanifest', '/admin-manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL)))

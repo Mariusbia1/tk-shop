@@ -10,6 +10,11 @@ import ErrorBoundary from './components/common/ErrorBoundary'
 import App from './App'
 import './index.css'
 
+const manifest = document.getElementById('app-manifest')
+if (manifest && window.location.pathname.startsWith('/admin')) {
+  manifest.setAttribute('href', '/admin-manifest.webmanifest')
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><ErrorBoundary><ThemeProvider><HelmetProvider><BrowserRouter><AdminAuthProvider><CartProvider><App/><Toaster position="bottom-right" toastOptions={{style:{borderRadius:18,fontFamily:'Manrope'}}}/></CartProvider></AdminAuthProvider></BrowserRouter></HelmetProvider></ThemeProvider></ErrorBoundary></React.StrictMode>
 )

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Shapes, ShoppingCart, Images, Quote,
-  FileText, Settings, User, LogOut, Search, Bell, Menu, X, ChevronRight,
+  FileText, Settings, User, LogOut, Search, Bell, Menu, X, ChevronRight, ExternalLink,
 } from 'lucide-react'
 import { useAdminAuth } from '../contexts/AdminAuthContext'
 import InstallAppButton from '../components/common/InstallAppButton'
@@ -62,6 +62,10 @@ function SidebarContent({ onNavigate }) {
     </div>
 
     <div className="mt-auto p-4">
+      <Link to="/" onClick={onNavigate} className="mb-3 flex w-full items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/10 hover:text-white">
+        <ExternalLink className="h-4 w-4 text-[#d7b65e]" />
+        Voir le site
+      </Link>
       <div className="mb-3 rounded-2xl border border-white/10 bg-white/5 p-3">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#d7b65e] to-[#b88b22] font-display text-xs font-bold text-white">TK</div>
