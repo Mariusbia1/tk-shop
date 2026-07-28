@@ -33,6 +33,7 @@ export default function AppRoutes(){
       <Route path="/faq" element={<FaqPage/>}/>
       <Route path="/politique-de-confidentialite" element={<LegalPage title="Politique de confidentialité"/>}/>
       <Route path="/conditions-generales" element={<LegalPage title="Conditions générales"/>}/>
+      <Route path="/mentions-legales" element={<LegalPage title="Mentions légales"/>}/>
       <Route path="/livraison-et-retours" element={<LegalPage title="Livraison et retours"/>}/>
       <Route path="*" element={<NotFound/>}/>
     </Route>

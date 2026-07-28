@@ -38,8 +38,14 @@ export function ContactPage(){
 
 export function LegalPage({title}){
   const {content}=useCatalog()
-  const key=title==='Politique de confidentialité'?'privacy':title==='Conditions générales'?'terms':'delivery'
-  const fallback='Les informations détaillées de cette page seront prochainement publiées par TK SHOP.'
+  const key=title==='Politique de confidentialité'?'privacy':title==='Conditions générales'?'terms':title==='Mentions légales'?'legal':'delivery'
+  const defaults={
+    privacy:'TK SHOP collecte uniquement les informations nécessaires au traitement des commandes et des demandes : nom, coordonnées, adresse de livraison et détails de la commande.\n\nCes données servent à préparer la commande, contacter la cliente et organiser la livraison. Elles ne sont pas vendues. Vous pouvez demander leur accès, leur correction ou leur suppression en contactant TK SHOP.',
+    terms:'Toute commande est confirmée après validation du modèle, des options, du prix et du délai avec TK SHOP. Les prix sont affichés en FCFA et les modalités de paiement sont communiquées lors de la confirmation.\n\nLes couleurs, tailles et mensurations fournies doivent être exactes. Les créations déjà commencées ou personnalisées peuvent ne pas être remboursables. Une solution amiable sera recherchée en priorité en cas de difficulté.',
+    delivery:'Les délais et frais de livraison dépendent de la destination et sont confirmés avant l’expédition. Tout problème doit être signalé dès la réception avec des photos.\n\nUne création personnalisée ou réalisée selon des mensurations spécifiques ne peut être retournée pour simple changement d’avis. En cas d’article endommagé ou non conforme, TK SHOP étudiera une réparation, un échange ou une solution adaptée.',
+    legal:'Le présent site est édité par TK SHOP — Taye & Kinde Shop, boutique de créations artisanales au crochet. Les coordonnées professionnelles sont celles affichées sur le site.\n\nLe site est hébergé par Vercel Inc. et les données applicatives par Supabase. Les textes, photographies, créations, éléments graphiques et logos sont protégés. Toute reproduction sans autorisation préalable est interdite.',
+  }
+  const fallback=defaults[key]
   const paragraphs=(content[key]?.body||fallback).split(/\n+/).filter(Boolean)
   return <><SEO title={`${title} | TK SHOP`}/><article className="mx-auto max-w-3xl px-5 py-20"><p className="text-xs font-bold uppercase tracking-[.2em] text-gold">Informations TK SHOP</p><h1 className="mt-4 font-display text-5xl">{title}</h1><div className="mt-10 grid gap-6">{paragraphs.map((paragraph,index)=><p key={index} className="whitespace-pre-wrap leading-8 text-black/60">{paragraph}</p>)}</div></article></>
 }
