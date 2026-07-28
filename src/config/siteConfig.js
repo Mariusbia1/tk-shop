@@ -1,5 +1,6 @@
 export const siteConfig = {
   name: 'TK SHOP',
+  fullName: 'Taye & Kinde Shop',
   slogan: 'L’élégance crochetée à la main.',
   description: 'TK SHOP imagine des pièces en crochet uniques, élégantes et personnalisables, réalisées point après point à la main pour révéler chaque femme.',
   whatsapp: '2290100000000',
