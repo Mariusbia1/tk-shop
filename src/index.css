@@ -66,6 +66,35 @@
     padding-right: .75rem;
   }
 
+  .dashboard-scroll {
+    max-width: 100%;
+    scrollbar-gutter: stable;
+    scrollbar-width: auto;
+    scrollbar-color: #B38A2C #f5ecda;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar {
+    height: 12px;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: #f5ecda;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb {
+    min-width: 80px;
+    border: 2px solid #f5ecda;
+    border-radius: 999px;
+    background: #B38A2C;
+  }
+
+  .dashboard-scroll::-webkit-scrollbar-thumb:hover {
+    background: #8f6a1e;
+  }
+
   .dark .admin-content .bg-white {
     border-color: rgb(255 255 255 / .08);
     background-color: #282115;
