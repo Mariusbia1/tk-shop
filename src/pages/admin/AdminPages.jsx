@@ -10,6 +10,7 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import Button from '../../components/common/Button'
 import SEO from '../../components/common/SEO'
 import InstallAppButton from '../../components/common/InstallAppButton'
+import PhoneInput from '../../components/common/PhoneInput'
 import {
   deleteCategory, deleteGalleryItem, deleteProduct, deleteProductImage, deleteTestimonial,
   getAdminOrders, getAdminProfile, getCategories, getDashboardData, getGallery,
@@ -93,7 +94,7 @@ function SettingsAdmin(){
   if(!form)return <><Title>Paramètres</Title><p className="bg-white p-10 text-center">Chargement…</p></>
   const submit=async event=>{event.preventDefault();setSaving(true);try{setForm(await saveSiteSettings(form));toast.success('Paramètres enregistrés.')}catch(error){toast.error(error.message)}finally{setSaving(false)}}
   const fields=[['shop_name','Nom court'],['full_name','Nom complet'],['whatsapp','Numéro WhatsApp'],['phone','Téléphone'],['email','E-mail'],['address','Adresse'],['instagram','Lien Instagram'],['facebook','Lien Facebook']]
-  return <><Title>Paramètres</Title><form onSubmit={submit} className="grid max-w-3xl gap-5 bg-white p-6 sm:grid-cols-2">{fields.map(([key,label])=><Field key={key} label={label}><input required={['shop_name','full_name'].includes(key)} type={key==='email'?'email':'text'} value={form[key]||''} onChange={e=>setForm({...form,[key]:e.target.value})} className={inputClass}/></Field>)}<Field label="Frais de livraison (FCFA)"><input type="number" min="0" value={form.delivery_fee||0} onChange={e=>setForm({...form,delivery_fee:e.target.value})} className={inputClass}/></Field><div className="sm:col-span-2"><Button type="submit" disabled={saving}>{saving?'Enregistrement…':'Enregistrer les paramètres'}</Button></div></form></>
+  return <><Title>Paramètres</Title><form onSubmit={submit} className="grid max-w-3xl gap-5 bg-white p-6 sm:grid-cols-2">{fields.map(([key,label])=><Field key={key} label={label}>{['phone','whatsapp'].includes(key)?<PhoneInput value={form[key]||''} onChange={value=>setForm({...form,[key]:value})}/>:<input required={['shop_name','full_name'].includes(key)} type={key==='email'?'email':'text'} value={form[key]||''} onChange={e=>setForm({...form,[key]:e.target.value})} className={inputClass}/>}</Field>)}<Field label="Frais de livraison (FCFA)"><input type="number" min="0" value={form.delivery_fee||0} onChange={e=>setForm({...form,delivery_fee:e.target.value})} className={inputClass}/></Field><div className="sm:col-span-2"><Button type="submit" disabled={saving}>{saving?'Enregistrement…':'Enregistrer les paramètres'}</Button></div></form></>
 }
 
 function ProfileAdmin(){

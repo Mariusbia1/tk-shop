@@ -18,6 +18,7 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.4.1",
+    "react-phone-number-input": "^3.4.17",
     "react-router-dom": "^7.1.1",
     "vite": "^6.0.5"
   },

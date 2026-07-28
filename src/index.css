@@ -95,6 +95,38 @@
     background: #8f6a1e;
   }
 
+  .international-phone-input {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #dfcfaa;
+    border-radius: .9rem;
+    background: #fffef9;
+    padding: 0 .8rem;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+
+  .international-phone-input:focus-within {
+    border-color: #B38A2C;
+    box-shadow: 0 0 0 4px rgb(179 138 44 / .12);
+  }
+
+  .international-phone-input .PhoneInputCountry {
+    flex-shrink: 0;
+    margin-right: .65rem;
+  }
+
+  .international-phone-input .PhoneInputCountrySelect {
+    cursor: pointer;
+  }
+
+  .international-phone-input .PhoneInputInput {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: .8rem 0;
+    outline: none;
+  }
+
   .dark .admin-content .bg-white {
     border-color: rgb(255 255 255 / .08);
     background-color: #282115;
