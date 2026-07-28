@@ -383,14 +383,17 @@ export async function recordPageVisit(path) {
   if (error && error.code !== '42P01') throw error
 }
 
-export async function getTrafficStats() {
-  const since = new Date()
-  since.setDate(since.getDate() - 30)
-  const { data, error } = await supabase
+export async function getTrafficStats(days = 30) {
+  let query = supabase
     .from('page_visits')
     .select('path, session_id, visited_at')
-    .gte('visited_at', since.toISOString())
     .order('visited_at')
+  if (days) {
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    query = query.gte('visited_at', since.toISOString())
+  }
+  const { data, error } = await query
   if (error) {
     if (error.code === '42P01') return { total: 0, visitors: 0, today: 0, daily: [], topPages: [] }
     throw error
@@ -407,7 +410,7 @@ export async function getTrafficStats() {
     total: data.length,
     visitors: new Set(data.map((visit) => visit.session_id)).size,
     today: data.filter((visit) => visit.visited_at.startsWith(today)).length,
-    daily: [...dailyMap].map(([date, count]) => ({ date, count })).slice(-14),
+    daily: [...dailyMap].map(([date, count]) => ({ date, count })),
     topPages: [...pageMap].map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 5),
   }
 }
