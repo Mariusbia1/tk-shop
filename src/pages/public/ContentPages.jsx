@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, X, MessageCircle, Mail, MapPin } from 'lucide-react'
+import toast from 'react-hot-toast'
 import SEO from '../../components/common/SEO'
 import Button from '../../components/common/Button'
 import Accordion from '../../components/common/Accordion'
@@ -32,8 +33,21 @@ export function ContactPage(){
     const data=new FormData(event.currentTarget)
     const body=`Bonjour ${settings.shop_name},\n\n${data.get('message')}\n\nNom : ${data.get('name')}\nTéléphone : ${data.get('phone')}\nE-mail : ${data.get('email')}\nSujet : ${data.get('subject')}`
     const number=String(settings.whatsapp||'').replace(/\D/g,'')
-    if(number)window.open(`https://wa.me/${number}?text=${encodeURIComponent(body)}`,'_blank','noopener,noreferrer')
-    else window.location.href=`mailto:${settings.email}?subject=${encodeURIComponent(data.get('subject'))}&body=${encodeURIComponent(body)}`
+    if(/^\d{8,15}$/.test(number)){
+      const whatsappUrl=new URL(`https://wa.me/${number}`)
+      whatsappUrl.searchParams.set('text',body)
+      window.open(whatsappUrl.toString(),'_blank','noopener,noreferrer')
+      return
+    }
+    const email=String(settings.email||'').trim()
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      toast.error('Aucun moyen de contact valide n’est configuré.')
+      return
+    }
+    const emailLink=document.createElement('a')
+    emailLink.href=`mailto:${email}?subject=${encodeURIComponent(String(data.get('subject')||''))}&body=${encodeURIComponent(body)}`
+    emailLink.rel='noopener noreferrer'
+    emailLink.click()
   }
   return <><SEO title="Contact | TK SHOP"/><div className="mx-auto grid max-w-6xl gap-14 px-5 py-20 md:grid-cols-2"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-gold">Parlons de votre projet</p><h1 className="mt-4 font-display text-5xl">Une question, une envie ?</h1><p className="mt-6 leading-8 text-black/60">Écrivez-nous. Nous vous répondrons avec plaisir pour imaginer ensemble votre prochaine création.</p><div className="mt-10 grid gap-5 text-sm"><p className="flex gap-3"><MessageCircle className="text-gold"/>{settings.phone}</p><p className="flex gap-3"><Mail className="text-gold"/>{settings.email}</p><p className="flex gap-3"><MapPin className="text-gold"/>{settings.address}</p></div></div><form onSubmit={submit} className="grid gap-4"><label className="text-sm font-semibold">Nom<input required name="name" className="mt-2 w-full border border-black/20 px-4 py-3"/></label><label className="text-sm font-semibold">E-mail<input required type="email" name="email" className="mt-2 w-full border border-black/20 px-4 py-3"/></label><label className="text-sm font-semibold">Téléphone<PhoneInput required value={phone} onChange={setPhone}/></label><label className="text-sm font-semibold">Sujet<input required name="subject" className="mt-2 w-full border border-black/20 px-4 py-3"/></label><label className="text-sm font-semibold">Message<textarea required name="message" rows="5" className="mt-2 w-full resize-none border border-black/20 px-4 py-3"/></label><Button type="submit">Envoyer sur WhatsApp</Button></form></div></>
 }
