@@ -26,9 +26,10 @@ export default function CheckoutPage() {
     if (missing || !form.terms) return toast.error('Veuillez compléter tous les champs obligatoires.')
     setSubmitting(true)
     try {
-      const order = await createOrder(form, items, { subtotal, deliveryFee, total })
-      window.open(whatsappUrl(createWhatsAppMessage(form, items, total, settings.shop_name), settings.whatsapp), '_blank', 'noopener,noreferrer')
-      sessionStorage.setItem('tk-shop-last-order', JSON.stringify({ form, items, total, order }))
+      const order = await createOrder(form, items)
+      const secureTotal = order?.total ?? total
+      window.open(whatsappUrl(createWhatsAppMessage(form, items, secureTotal, settings.shop_name), settings.whatsapp), '_blank', 'noopener,noreferrer')
+      sessionStorage.setItem('tk-shop-last-order', JSON.stringify({ form, items, total: secureTotal, order }))
       navigate('/commande/confirmation')
     } catch (error) {
       toast.error(`La commande n’a pas pu être enregistrée : ${error.message}`)

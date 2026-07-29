@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Shapes, ShoppingCart, Images, Quote,
-  FileText, Settings, User, LogOut, Search, Bell, Menu, X, ChevronRight, ExternalLink,
+  FileText, Settings, User, LogOut, Search, Bell, Menu, X, ChevronRight, ExternalLink, ShieldCheck,
 } from 'lucide-react'
 import { useAdminAuth } from '../contexts/AdminAuthContext'
 import InstallAppButton from '../components/common/InstallAppButton'
@@ -18,6 +18,7 @@ const nav = [
   ['/admin/temoignages', Quote, 'Témoignages'],
   ['/admin/contenus', FileText, 'Contenus'],
   ['/admin/parametres', Settings, 'Paramètres'],
+  ['/admin/activite', ShieldCheck, 'Journal de sécurité'],
   ['/admin/profil', User, 'Profil'],
 ]
 

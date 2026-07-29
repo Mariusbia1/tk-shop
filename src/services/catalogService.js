@@ -375,10 +375,10 @@ export async function recordPageVisit(path) {
     sessionId = crypto.randomUUID()
     sessionStorage.setItem(storageKey, sessionId)
   }
-  const { error } = await supabase.from('page_visits').insert({
-    path,
-    session_id: sessionId,
-    referrer: document.referrer || null,
+  const { error } = await supabase.rpc('record_page_visit', {
+    p_path: path,
+    p_session_id: sessionId,
+    p_referrer: document.referrer || null,
   })
   if (error && error.code !== '42P01') throw error
 }
@@ -413,4 +413,17 @@ export async function getTrafficStats(days = 30) {
     daily: [...dailyMap].map(([date, count]) => ({ date, count })),
     topPages: [...pageMap].map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 5),
   }
+}
+
+export async function getAuditLogs() {
+  const { data, error } = await supabase
+    .from('admin_audit_logs')
+    .select('*')
+    .order('occurred_at', { ascending: false })
+    .limit(200)
+  if (error) {
+    if (error.code === '42P01') return []
+    throw error
+  }
+  return data
 }

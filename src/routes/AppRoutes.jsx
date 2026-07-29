@@ -8,7 +8,7 @@ import ProductPage from '../pages/public/ProductPage'
 import CartPage from '../pages/public/CartPage'
 import CheckoutPage from '../pages/public/CheckoutPage'
 import { AboutPage, GalleryPage, ContactPage, FaqPage, ConfirmationPage, LegalPage } from '../pages/public/ContentPages'
-import { LoginPage, ProtectedAdminRoute, DashboardPage, ProductsAdmin, ProductFormPage, CategoriesAdmin, OrdersAdmin, OrderDetail, SimpleAdminPage } from '../pages/admin/AdminPages'
+import { LoginPage, ForgotPasswordPage, ResetPasswordPage, ProtectedAdminRoute, DashboardPage, ProductsAdmin, ProductFormPage, CategoriesAdmin, OrdersAdmin, OrderDetail, SimpleAdminPage, AuditLogPage } from '../pages/admin/AdminPages'
 import Button from '../components/common/Button'
 
 const Category = () => { const { slug } = useParams(); return <ShopPage categorySlug={slug}/> }
@@ -38,6 +38,8 @@ export default function AppRoutes(){
       <Route path="*" element={<NotFound/>}/>
     </Route>
     <Route path="/admin/connexion" element={<LoginPage/>}/>
+    <Route path="/admin/mot-de-passe-oublie" element={<ForgotPasswordPage/>}/>
+    <Route path="/admin/reinitialiser" element={<ResetPasswordPage/>}/>
     <Route path="/admin" element={<ProtectedAdminRoute><AdminLayout/></ProtectedAdminRoute>}>
       <Route index element={<DashboardPage/>}/>
       <Route path="produits" element={<ProductsAdmin/>}/>
@@ -50,6 +52,7 @@ export default function AppRoutes(){
       <Route path="temoignages" element={<SimpleAdminPage title="Témoignages" type="testimonials"/>}/>
       <Route path="contenus" element={<SimpleAdminPage title="Contenus"/>}/>
       <Route path="parametres" element={<SimpleAdminPage title="Paramètres"/>}/>
+      <Route path="activite" element={<AuditLogPage/>}/>
       <Route path="profil" element={<SimpleAdminPage title="Profil"/>}/>
     </Route>
   </Routes></Suspense>
