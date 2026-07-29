@@ -138,9 +138,9 @@ export default function AdminLayout() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <label className="hidden h-11 min-w-64 items-center gap-3 rounded-2xl border border-[#e3d3ad] bg-[#fffdf7] px-4 xl:flex dark:border-white/10 dark:bg-white/5">
-              <Search className="h-4 w-4 text-[#a67b20]" />
-              <input placeholder="Rechercher dans l’administration" className="w-full bg-transparent text-xs outline-none" />
+            <label className="admin-search hidden h-11 min-w-64 items-center gap-3 rounded-2xl border border-[#e3d3ad] bg-[#fffdf7] px-4 transition focus-within:border-gold focus-within:ring-4 focus-within:ring-gold/10 xl:flex dark:border-goldSoft/25 dark:bg-[#2d271b]">
+              <Search className="h-4 w-4 shrink-0 text-[#a67b20] dark:text-[#e2c778]" />
+              <input placeholder="Rechercher dans l’administration" className="w-full bg-transparent text-xs text-ink outline-none placeholder:text-black/45 dark:text-[#fffdf7] dark:placeholder:text-[#bcb3a0]" />
             </label>
             <InstallAppButton compact manifestHref="/admin-manifest.webmanifest" label="Installer TK Admin" />
             <Link to="/admin/commandes" onClick={()=>setNewOrders(0)} className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#e3d3ad] bg-white dark:border-white/10 dark:bg-white/5" aria-label={`${newOrders} nouvelles commandes`}>
