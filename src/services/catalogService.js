@@ -6,6 +6,7 @@ const normalizeColor = (value = '') => {
   return clean ? clean.charAt(0).toLocaleUpperCase('fr-FR') + clean.slice(1) : ''
 }
 const normalizeSize = (value = '') => value.trim().toLocaleUpperCase('fr-FR')
+const mediaTypeForFile = (file) => file.type.startsWith('video/') ? 'video' : 'image'
 
 const mapProduct = (product) => ({
   id: product.id,
@@ -19,11 +20,15 @@ const mapProduct = (product) => ({
   categorySlug: product.categories?.slug || '',
   categoryId: product.category_id,
   images: (product.product_images || [])
+    .filter((media) => (media.media_type || 'image') === 'image')
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((image) => image.url),
+  media: (product.product_images || [])
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((media) => ({ id: media.id, url: media.url, type: media.media_type || 'image', sortOrder: media.sort_order })),
   imageRecords: (product.product_images || [])
     .sort((a, b) => a.sort_order - b.sort_order)
-    .map((image) => ({ id: image.id, url: image.url, sortOrder: image.sort_order })),
+    .map((media) => ({ id: media.id, url: media.url, type: media.media_type || 'image', sortOrder: media.sort_order })),
   colors: (product.colors || []).map(normalizeColor).filter(Boolean),
   sizes: (product.sizes || []).map(normalizeSize).filter(Boolean),
   stockStatus: product.stock_status,
@@ -41,7 +46,7 @@ const mapProduct = (product) => ({
 export async function getProducts({ includeDrafts = false } = {}) {
   let query = supabase
     .from('products')
-    .select('*, categories(name, slug), product_images(id, url, alt_text, sort_order)')
+    .select('*, categories(name, slug), product_images(id, url, alt_text, media_type, sort_order)')
     .order('created_at', { ascending: false })
 
   if (!includeDrafts) query = query.eq('is_published', true)
@@ -73,6 +78,7 @@ export async function getGallery({ includeDrafts = false } = {}) {
   return data.map((item) => ({
     id: item.id,
     image: item.image_url,
+    mediaType: item.media_type || 'image',
     title: item.title,
     category: item.category,
     sortOrder: item.sort_order,
@@ -105,6 +111,9 @@ export async function getAdminOrders() {
 }
 
 export async function uploadCatalogImage(file, folder = 'products') {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm', 'video/quicktime']
+  if (!allowedTypes.includes(file.type)) throw new Error('Format non accepté. Utilisez JPG, PNG, WebP, MP4, WebM ou MOV.')
+  if (file.size > 50 * 1024 * 1024) throw new Error('Le fichier dépasse la limite de 50 Mo.')
   const extension = file.name.split('.').pop()?.toLowerCase() || 'jpg'
   const path = `${folder}/${crypto.randomUUID()}.${extension}`
   const { error } = await supabase.storage.from('catalog').upload(path, file, { upsert: false })
@@ -143,7 +152,10 @@ export async function saveProduct(product, imageFiles = []) {
   if (error) throw error
 
   if (imageFiles.length) {
-    const urls = await Promise.all(imageFiles.map((file) => uploadCatalogImage(file)))
+    const uploadedMedia = await Promise.all(imageFiles.map(async (file) => ({
+      url: await uploadCatalogImage(file),
+      type: mediaTypeForFile(file),
+    })))
     const { data: existingImages } = await supabase
       .from('product_images')
       .select('sort_order')
@@ -152,9 +164,10 @@ export async function saveProduct(product, imageFiles = []) {
       .limit(1)
     const startAt = (existingImages?.[0]?.sort_order ?? -1) + 1
     const { error: imageError } = await supabase.from('product_images').insert(
-      urls.map((url, index) => ({
+      uploadedMedia.map((media, index) => ({
         product_id: saved.id,
-        url,
+        url: media.url,
+        media_type: media.type,
         alt_text: product.name,
         sort_order: startAt + index,
       }))
@@ -215,11 +228,12 @@ export async function updateOrderStatus(id, status) {
 
 export async function saveGalleryItem(item, imageFile) {
   const image = imageFile ? await uploadCatalogImage(imageFile, 'gallery') : item.image
-  if (!image) throw new Error('Ajoutez une image à la réalisation.')
+  if (!image) throw new Error('Ajoutez une photo ou une vidéo à la réalisation.')
   const payload = {
     title: item.title.trim(),
     category: item.category?.trim() || null,
     image_url: image,
+    media_type: imageFile ? mediaTypeForFile(imageFile) : (item.mediaType || 'image'),
     sort_order: Number(item.sortOrder) || 0,
     is_published: item.isPublished !== false,
   }
