@@ -1,4 +1,4 @@
-const CACHE = 'tk-shop-v7-instant-loader'
+const CACHE = 'tk-shop-v8-media-thumbnails'
 const APP_SHELL = ['/', '/manifest.webmanifest', '/admin-manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', (event) => {

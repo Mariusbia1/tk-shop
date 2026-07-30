@@ -7,12 +7,20 @@ const CartContext = createContext(null)
 const keyFor = (product, options) => [product.id, options.size, options.color, options.measurements, options.note].join('|')
 
 export function CartProvider({ children }) {
-  const { settings } = useCatalog()
+  const { settings, products } = useCatalog()
   const [items, setItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('atelier-naya-cart')) || [] } catch { return [] }
   })
 
   useEffect(() => localStorage.setItem('atelier-naya-cart', JSON.stringify(items)), [items])
+
+  useEffect(() => {
+    if (!products.length) return
+    setItems((current) => current.map((item) => {
+      const freshProduct = products.find((product) => product.id === item.id)
+      return freshProduct ? { ...item, images: freshProduct.images, media: freshProduct.media } : item
+    }))
+  }, [products])
 
   const addItem = (product, options = {}) => {
     const lineKey = keyFor(product, options)
