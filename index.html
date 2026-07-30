@@ -7,12 +7,21 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="TK SHOP" />
+    <style>
+      html,body{margin:0;background:#fffefa}
+      .boot-loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#fffefa;color:#181713;text-align:center;font-family:Arial,sans-serif}
+      .boot-loader__content strong{display:block;margin-top:22px;font-family:Georgia,serif;font-size:27px;font-weight:600}
+      .boot-loader__content small{display:block;margin-top:9px;color:#9a741e;font-size:10px;font-weight:700;letter-spacing:.22em}
+      .boot-loader__mark{position:relative;width:92px;height:92px;margin:auto;border:1px solid rgba(179,138,44,.25);border-radius:50%}
+      .boot-loader__mark:before{content:"";position:absolute;inset:8px;border:2px solid transparent;border-top-color:#b38a2c;border-right-color:#b38a2c;border-radius:50%;animation:boot-spin 1s linear infinite}
+      .boot-loader__mark span{position:absolute;inset:28px;display:grid;place-items:center;border-radius:50%;background:#b38a2c;color:white;font-family:Georgia,serif;font-weight:700}
+      @keyframes boot-spin{to{transform:rotate(360deg)}}
+      @media(prefers-color-scheme:dark){html,body,.boot-loader{background:#17140f;color:#fffdf7}}
+      @media(prefers-reduced-motion:reduce){.boot-loader__mark:before{animation:none}}
+    </style>
     <link id="app-manifest" rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/app-icon-192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <title>TK SHOP | Créations crochetées à la main</title>
   </head>
   <body>
@@ -25,17 +34,6 @@
         </div>
       </div>
     </div>
-    <style>
-      .boot-loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#fffefa;color:#181713;text-align:center;font-family:Manrope,sans-serif}
-      .boot-loader__content strong{display:block;margin-top:22px;font:600 27px "Playfair Display",serif}
-      .boot-loader__content small{display:block;margin-top:9px;color:#9a741e;font-size:10px;font-weight:700;letter-spacing:.22em}
-      .boot-loader__mark{position:relative;width:92px;height:92px;margin:auto;border:1px solid rgba(179,138,44,.25);border-radius:50%}
-      .boot-loader__mark:before{content:"";position:absolute;inset:8px;border:2px solid transparent;border-top-color:#b38a2c;border-right-color:#b38a2c;border-radius:50%;animation:boot-spin 1s linear infinite}
-      .boot-loader__mark span{position:absolute;inset:28px;display:grid;place-items:center;border-radius:50%;background:#b38a2c;color:white;font-family:"Playfair Display",serif;font-weight:700}
-      @keyframes boot-spin{to{transform:rotate(360deg)}}
-      @media(prefers-color-scheme:dark){.boot-loader{background:#17140f;color:#fffdf7}}
-      @media(prefers-reduced-motion:reduce){.boot-loader__mark:before{animation:none}}
-    </style>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
