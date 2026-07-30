@@ -65,5 +65,5 @@ export default function ProductPage() {
       <button type="button" onClick={orderNow} className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 border border-ink text-sm font-semibold transition hover:bg-ink hover:text-white"><MessageCircle className="h-4 w-4" /> Commander directement</button>
       <div className="mt-8 divide-y border-y text-sm"><div className="py-4"><b>Délai de confection :</b> {product.productionTime}</div><div className="py-4"><b>Matières :</b> {product.materials}</div><div className="py-4"><b>Entretien :</b> {product.careInstructions}</div></div>
     </div></div>
-    <section className="py-24"><h2 className="mb-8 font-display text-3xl">Vous aimerez aussi</h2><div className="grid grid-cols-2 gap-5 md:grid-cols-4">{products.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4).map(p=><ProductCard key={p.id} product={p}/>)}</div></section></div></>
+    <section className="py-24"><h2 className="mb-8 font-display text-3xl">Vous aimerez aussi</h2><div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4">{products.filter(p=>p.categorySlug===product.categorySlug&&p.id!==product.id).slice(0,4).map(p=><ProductCard key={p.id} product={p}/>)}</div></section></div></>
 }

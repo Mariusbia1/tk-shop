@@ -346,7 +346,7 @@ export async function updateAdminPassword(password) {
 export async function getDashboardData() {
   const [productsResult, categoriesResult, ordersResult] = await Promise.all([
     getProducts({ includeDrafts: true }),
-    getCategories({ includeInactive: true }),
+    getCategories(),
     getAdminOrders(),
   ])
   const activeOrders = ordersResult.filter((order) => !['delivered', 'cancelled'].includes(order.status))
