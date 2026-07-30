@@ -1,4 +1,4 @@
-const CACHE = 'tk-shop-v4-video-csp'
+const CACHE = 'tk-shop-v5-loader'
 const APP_SHELL = ['/', '/manifest.webmanifest', '/admin-manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', (event) => {
