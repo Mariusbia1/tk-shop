@@ -346,7 +346,11 @@ export async function updateAdminPassword(password) {
 
 export async function updateAdminEmail(email) {
   const cleanEmail = email.trim().toLowerCase()
-  const { data, error } = await supabase.auth.updateUser({ email: cleanEmail })
+  const emailRedirectTo = `${window.location.origin}/admin`
+  const { data, error } = await supabase.auth.updateUser(
+    { email: cleanEmail },
+    { emailRedirectTo },
+  )
   if (error) throw error
   return data.user
 }
