@@ -18,7 +18,7 @@ import {
   getAdminOrders, getAdminProfile, getCategories, getDashboardData, getGallery,
   getProducts, getSiteContent, getSiteSettings, getTestimonials, getTrafficStats, getAuditLogs,
   reorderProductImages,
-  saveAdminProfile, saveCategory, saveGalleryItem, saveProduct, saveSiteContent,
+  saveAdminProfile, saveCategory, saveGalleryItem, saveProduct, saveSiteContent, uploadCatalogImage,
   saveSiteSettings, saveTestimonial, updateAdminEmail, updateAdminPassword, updateOrderStatus,
 } from '../../services/catalogService'
 
@@ -81,12 +81,32 @@ function TestimonialsAdmin(){
 }
 
 function ContentAdmin(){
-  const defaults={hero:{eyebrow:'Crochet d’exception · Fait main',title:'La douceur prend forme.',description:'Des pièces en crochet singulières, façonnées point après point à la main.'},about:{title:'Le crochet entre les mains, l’élégance en héritage.',description:'TK SHOP est née d’une passion profonde pour le crochet.'}}
-  const [content,setContent]=useState(defaults),[saving,setSaving]=useState(false)
-  useEffect(()=>{getSiteContent().then(data=>setContent({...defaults,...data})).catch(error=>toast.error(error.message))},[])
+  const defaults={
+    hero:{eyebrow:'Crochet d’exception · Fait main',title:'La douceur prend forme.',description:'Des pièces en crochet singulières, façonnées point après point à la main pour envelopper chaque femme d’élégance et de douceur.',primaryButton:'Découvrir le crochet',secondaryButton:'Imaginer ma pièce'},
+    homeIntro:{eyebrow:'L’art du crochet',title:'Un point après l’autre. Une émotion à porter.',description:'Chez TK SHOP, le fil de coton devient une silhouette moderne entre les mains de la créatrice. Chaque boucle est crochetée avec patience pour créer une pièce douce, durable et vraiment personnelle.'},
+    homeProducts:{eyebrow:'Crochets coup de cœur',title:'Nos créations signatures',button:'Voir toute la collection'},
+    homeGallery:{eyebrow:'Carnet d’atelier',title:'Nos créations prennent vie',description:'Découvrez l’allure et les détails des créations TK SHOP à travers une sélection de photos et de vidéos.',button:'Découvrir toute la galerie'},
+    homeStory:{eyebrow:'La main derrière le crochet',title:'Le crochet comme langage',description:'TK imagine des silhouettes féminines à partir de fils doux, de boucles et de motifs ajourés. Chaque pièce porte la trace du geste, le temps de la création et une attention rien que pour vous.',button:'Entrer dans l’atelier'},
+    homeFaq:{eyebrow:'Questions fréquentes',title:'Avant de commencer votre création'},
+    homeCta:{title:'Une création pensée spécialement pour vous.',button:'Découvrir la collection'},
+    collection:{eyebrow:'Notre crochet',title:'La collection',description:'Découvrez des créations crochetées lentement à la main, pensées pour être portées longtemps.'},
+    galleryPage:{eyebrow:'Carnet d’atelier',title:'Galerie de réalisations'},
+    about:{eyebrow:'Notre histoire',title:'Le crochet entre les mains, l’élégance en héritage.',description:'TK SHOP est née d’une passion profonde pour le crochet. La créatrice transforme le fil, point après point, en pièces contemporaines.',sectionTitle:'Le crochet comme signature',sectionText:'Chaque création commence par une conversation, le choix du fil et un motif. La pièce grandit ensuite boucle après boucle sous le crochet, jusqu’à épouser parfaitement la silhouette.',image:''},
+    contact:{eyebrow:'Parlons de votre projet',title:'Une question, une envie ?',description:'Écrivez-nous. Nous vous répondrons avec plaisir pour imaginer ensemble votre prochaine création.',button:'Envoyer sur WhatsApp'},
+    faqPage:{title:'Questions fréquentes'},
+    footer:{eyebrow:'Crocheté avec passion à Cotonou',description:'Des pièces en crochet uniques, élégantes et personnalisables, réalisées point après point à la main.'},
+  }
+  const tabs=[['home','Accueil'],['catalog','Collection & galerie'],['about','À propos'],['contact','Contact & pied de page'],['legal','Pages légales']]
+  const sectionsByTab={home:['hero','homeIntro','homeProducts','homeGallery','homeStory','homeFaq','homeCta'],catalog:['collection','galleryPage'],about:['about'],contact:['contact','faqPage','footer']}
+  const sectionTitles={hero:'Hero principal',homeIntro:'Introduction',homeProducts:'Produits mis en avant',homeGallery:'Galerie sur l’accueil',homeStory:'Présentation de l’atelier',homeFaq:'Bloc questions fréquentes',homeCta:'Appel à l’action',collection:'Page collection',galleryPage:'Page galerie',about:'Page À propos',contact:'Page contact',faqPage:'Page FAQ',footer:'Pied de page'}
+  const fieldLabels={eyebrow:'Petit titre',title:'Titre',description:'Description',primaryButton:'Bouton principal',secondaryButton:'Second bouton',button:'Texte du bouton',sectionTitle:'Titre de la seconde section',sectionText:'Texte de la seconde section'}
+  const legalDefaults={privacy:{body:'TK SHOP collecte uniquement les informations nécessaires au traitement des commandes et des demandes.'},terms:{body:'Toute commande est confirmée après validation du modèle, des options, du prix et du délai avec TK SHOP.'},delivery:{body:'Les délais et frais de livraison dépendent de la destination et sont confirmés avant l’expédition.'},legal:{body:'Le présent site est édité par TK SHOP — Taye & Kinde Shop.'}}
+  const [content,setContent]=useState({...defaults,...legalDefaults}),[saving,setSaving]=useState(false),[activeTab,setActiveTab]=useState('home'),[aboutFile,setAboutFile]=useState(null)
+  useEffect(()=>{getSiteContent().then(data=>setContent(current=>({...current,...data}))).catch(error=>toast.error(error.message))},[])
   const update=(section,key,value)=>setContent(current=>({...current,[section]:{...current[section],[key]:value}}))
-  const submit=async event=>{event.preventDefault();setSaving(true);try{await Promise.all([saveSiteContent('hero',content.hero),saveSiteContent('about',content.about)]);toast.success('Contenus du site enregistrés.')}catch(error){toast.error(error.message)}finally{setSaving(false)}}
-  return <><Title>Contenus</Title><form onSubmit={submit} className="grid gap-6"><section className="grid gap-4 bg-white p-6"><h2 className="font-display text-xl">Page d’accueil — Hero</h2><Field label="Petit titre"><input value={content.hero.eyebrow} onChange={e=>update('hero','eyebrow',e.target.value)} className={inputClass}/></Field><Field label="Titre principal"><input value={content.hero.title} onChange={e=>update('hero','title',e.target.value)} className={inputClass}/></Field><Field label="Description"><textarea rows="4" value={content.hero.description} onChange={e=>update('hero','description',e.target.value)} className={inputClass}/></Field></section><section className="grid gap-4 bg-white p-6"><h2 className="font-display text-xl">Page À propos</h2><Field label="Titre"><input value={content.about.title} onChange={e=>update('about','title',e.target.value)} className={inputClass}/></Field><Field label="Présentation"><textarea rows="5" value={content.about.description} onChange={e=>update('about','description',e.target.value)} className={inputClass}/></Field></section><Button type="submit" disabled={saving}>{saving?'Enregistrement…':'Enregistrer les contenus'}</Button></form></>
+  const submit=async event=>{event.preventDefault();setSaving(true);try{let next=content;if(aboutFile){if(!aboutFile.type.startsWith('image/'))throw new Error('La photo À propos doit être une image.');const image=await uploadCatalogImage(aboutFile,'content');next={...content,about:{...content.about,image}};setContent(next);setAboutFile(null)}const keys=activeTab==='legal'?['privacy','terms','delivery','legal']:sectionsByTab[activeTab];await Promise.all(keys.map(key=>saveSiteContent(key,next[key])));toast.success('Contenus enregistrés.')}catch(error){toast.error(error.message)}finally{setSaving(false)}}
+  const renderFields=section=>Object.entries(content[section]||{}).filter(([key])=>key!=='image'&&key!=='body').map(([key,value])=><Field key={key} label={fieldLabels[key]||key}>{['description','sectionText'].includes(key)?<textarea rows="4" value={value||''} onChange={e=>update(section,key,e.target.value)} className={inputClass}/>:<input value={value||''} onChange={e=>update(section,key,e.target.value)} className={inputClass}/>}</Field>)
+  return <><Title>Contenus</Title><div className="dashboard-scroll mb-6 max-w-full overflow-x-auto"><div className="flex min-w-max gap-2">{tabs.map(([id,label])=><button key={id} type="button" onClick={()=>setActiveTab(id)} className={`rounded-full px-5 py-3 text-xs font-bold transition ${activeTab===id?'bg-gold text-white':'bg-white text-black/60 hover:text-gold'}`}>{label}</button>)}</div></div><form onSubmit={submit} className="grid gap-6">{activeTab==='legal'?[['privacy','Politique de confidentialité'],['terms','Conditions générales'],['delivery','Livraison et retours'],['legal','Mentions légales']].map(([key,title])=><section key={key} className="grid gap-4 bg-white p-6"><h2 className="font-display text-xl">{title}</h2><Field label="Contenu"><textarea rows="10" value={content[key]?.body||''} onChange={e=>update(key,'body',e.target.value)} className={inputClass}/></Field></section>):sectionsByTab[activeTab].map(section=><section key={section} className="grid gap-4 bg-white p-6"><h2 className="font-display text-xl">{sectionTitles[section]}</h2>{renderFields(section)}{section==='about'&&<><Field label="Photo de la créatrice / de l’atelier"><input type="file" accept="image/*" onChange={e=>setAboutFile(e.target.files?.[0]||null)} className={inputClass}/></Field>{content.about.image&&<img src={content.about.image} alt="Aperçu À propos" className="max-h-72 w-full rounded-2xl object-cover"/>}</>}</section>)}<Button type="submit" disabled={saving}>{saving?'Enregistrement…':'Enregistrer cet onglet'}</Button></form></>
 }
 
 function SettingsAdmin(){
@@ -123,7 +143,7 @@ function LegalContentAdmin(){
 export function SimpleAdminPage({title,type}){
   if(type==='gallery')return <GalleryAdmin/>
   if(type==='testimonials')return <TestimonialsAdmin/>
-  if(title==='Contenus')return <><ContentAdmin/><LegalContentAdmin/></>
+  if(title==='Contenus')return <ContentAdmin/>
   if(title==='Paramètres')return <SettingsAdmin/>
   if(title==='Profil')return <ProfileAdmin/>
   return <><Title>{title}</Title><p className="bg-white p-10">Cette section est prête.</p></>

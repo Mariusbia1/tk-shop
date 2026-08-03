@@ -14,13 +14,6 @@
 }
 
 @layer components {
-  .knit-texture {
-    background-image:
-      radial-gradient(circle at 20% 20%, rgb(255 255 255 / .5) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 80% 80%, rgb(179 138 44 / .2) 0 1px, transparent 1.5px);
-    background-size: 14px 14px;
-  }
-
   .admin-content > * {
     animation: admin-fade-in .35s ease both;
   }
