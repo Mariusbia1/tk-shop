@@ -4,15 +4,15 @@ const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('atelier-naya-theme-v2')
+    const savedTheme = localStorage.getItem('atelier-naya-theme-v3')
     if (savedTheme) return savedTheme
-    return 'light'
+    return 'dark'
   })
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     document.documentElement.style.colorScheme = theme
-    localStorage.setItem('atelier-naya-theme-v2', theme)
+    localStorage.setItem('atelier-naya-theme-v3', theme)
   }, [theme])
 
   const toggleTheme = () => setTheme((current) => current === 'light' ? 'dark' : 'light')

@@ -1,4 +1,4 @@
-const CACHE = 'tk-shop-v9-local-flags'
+const CACHE = 'tk-shop-v10-dark-pinterest-account'
 const APP_SHELL = ['/', '/manifest.webmanifest', '/admin-manifest.webmanifest', '/app-icon.svg']
 
 self.addEventListener('install', (event) => {

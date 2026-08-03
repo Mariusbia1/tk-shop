@@ -17,7 +17,7 @@ export function CatalogProvider({ children }) {
   const [settings, setSettings] = useState({
     shop_name: siteConfig.name, full_name: siteConfig.fullName, whatsapp: siteConfig.whatsapp,
     phone: siteConfig.phone, email: siteConfig.email, address: siteConfig.address,
-    instagram: siteConfig.instagram, facebook: siteConfig.facebook, delivery_fee: siteConfig.deliveryFee,
+    instagram: siteConfig.instagram, facebook: siteConfig.facebook, pinterest: '', delivery_fee: siteConfig.deliveryFee,
   })
   const [content, setContent] = useState({})
   const [loading, setLoading] = useState(isSupabaseConfigured)

@@ -292,6 +292,7 @@ export async function saveSiteSettings(settings) {
     address: settings.address?.trim() || null,
     instagram: settings.instagram?.trim() || null,
     facebook: settings.facebook?.trim() || null,
+    pinterest: settings.pinterest?.trim() || null,
     delivery_fee: Number(settings.delivery_fee) || 0,
   }
   const { data, error } = await supabase.from('site_settings').upsert(payload).select().single()
@@ -341,6 +342,13 @@ export async function saveAdminProfile(fullName) {
 export async function updateAdminPassword(password) {
   const { error } = await supabase.auth.updateUser({ password })
   if (error) throw error
+}
+
+export async function updateAdminEmail(email) {
+  const cleanEmail = email.trim().toLowerCase()
+  const { data, error } = await supabase.auth.updateUser({ email: cleanEmail })
+  if (error) throw error
+  return data.user
 }
 
 export async function getDashboardData() {
