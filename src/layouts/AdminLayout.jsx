@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Shapes, ShoppingCart, Images, Quote,
@@ -8,6 +8,7 @@ import { useAdminAuth } from '../contexts/AdminAuthContext'
 import InstallAppButton from '../components/common/InstallAppButton'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
+import { getNotifications, markAllNotificationsRead, markNotificationRead } from '../services/notificationService'
 
 const nav = [
   ['/admin', LayoutDashboard, 'Tableau de bord'],
@@ -88,24 +89,58 @@ function SidebarContent({ onNavigate }) {
 
 export default function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [newOrders, setNewOrders] = useState(0)
+  const [notifications, setNotifications] = useState([])
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [notificationPermission, setNotificationPermission] = useState(() => 'Notification' in window ? Notification.permission : 'unsupported')
+  const notificationPanel = useRef(null)
+  const navigate = useNavigate()
   const { pathname } = useLocation()
   const current = nav.find(([to]) => to === pathname)?.[2] || 'Administration'
 
   useEffect(() => {
     if (!supabase) return undefined
-    const channel = supabase.channel('admin-new-orders')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, ({ new: order }) => {
-        setNewOrders((count) => count + 1)
-        toast.success(`Nouvelle commande ${order.order_number || ''}`, { duration: 7000 })
+    getNotifications().then(setNotifications).catch(() => {})
+    const channel = supabase.channel('admin-notifications')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'admin_notifications' }, ({ new: notification }) => {
+        setNotifications((current) => [notification, ...current].slice(0, 20))
+        toast.success(notification.title, { duration: 7000 })
         if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Nouvelle commande TK SHOP', { body: `${order.customer_name} vient de passer une commande.` })
+          new Notification(notification.title, { body: notification.message, icon: '/app-icon-192.png' })
         }
       })
       .subscribe()
-    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission()
     return () => { supabase.removeChannel(channel) }
   }, [])
+
+  useEffect(() => {
+    const close = (event) => {
+      if (notificationPanel.current && !notificationPanel.current.contains(event.target)) setNotificationsOpen(false)
+    }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [])
+
+  const unreadCount = notifications.filter((item) => !item.read_at).length
+  const openNotification = async (notification) => {
+    if (!notification.read_at) {
+      const readAt = new Date().toISOString()
+      setNotifications((current) => current.map((item) => item.id === notification.id ? { ...item, read_at: readAt } : item))
+      try { await markNotificationRead(notification.id) } catch { toast.error('Impossible de marquer la notification comme lue.') }
+    }
+    setNotificationsOpen(false)
+    if (notification.target_path) navigate(notification.target_path)
+  }
+  const markAllRead = async () => {
+    const readAt = new Date().toISOString()
+    setNotifications((current) => current.map((item) => ({ ...item, read_at: item.read_at || readAt })))
+    try { await markAllNotificationsRead() } catch { toast.error('Impossible de mettre les notifications à jour.') }
+  }
+  const enableBrowserNotifications = async () => {
+    if (!('Notification' in window)) return
+    const permission = await Notification.requestPermission()
+    setNotificationPermission(permission)
+    if (permission === 'granted') toast.success('Notifications du navigateur activées.')
+  }
 
   return (
     <div className="admin-shell min-h-screen bg-[#faf5ea] text-ink dark:bg-[#17140f]">
@@ -143,10 +178,17 @@ export default function AdminLayout() {
               <input placeholder="Rechercher dans l’administration" className="w-full bg-transparent text-xs text-ink outline-none placeholder:text-black/45 dark:text-[#fffdf7] dark:placeholder:text-[#bcb3a0]" />
             </label>
             <InstallAppButton compact manifestHref="/admin-manifest.webmanifest" label="Installer TK Admin" />
-            <Link to="/admin/commandes" onClick={()=>setNewOrders(0)} className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#e3d3ad] bg-white dark:border-white/10 dark:bg-white/5" aria-label={`${newOrders} nouvelles commandes`}>
-              <Bell className="h-4 w-4" />
-              {newOrders>0&&<span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#b88b22] px-1 text-[9px] font-bold text-white">{newOrders}</span>}
-            </Link>
+            <div className="relative" ref={notificationPanel}>
+              <button onClick={() => setNotificationsOpen((open) => !open)} className="relative grid h-11 w-11 place-items-center rounded-2xl border border-[#e3d3ad] bg-white dark:border-white/10 dark:bg-white/5" aria-label={`${unreadCount} notifications non lues`} aria-expanded={notificationsOpen}>
+                <Bell className="h-4 w-4" />
+                {unreadCount>0&&<span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#b88b22] px-1 text-[9px] font-bold text-white">{unreadCount>9?'9+':unreadCount}</span>}
+              </button>
+              {notificationsOpen&&<div className="absolute right-0 top-14 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-[#e3d3ad] bg-white shadow-2xl dark:border-white/10 dark:bg-[#241d0e]">
+                <div className="flex items-center justify-between border-b border-[#eadfc5] p-4 dark:border-white/10"><div><p className="font-display text-lg">Notifications</p><p className="text-[10px] text-black/45 dark:text-white/45">{unreadCount ? `${unreadCount} non lue${unreadCount>1?'s':''}` : 'Tout est à jour'}</p></div>{unreadCount>0&&<button onClick={markAllRead} className="text-[10px] font-bold text-gold">Tout marquer comme lu</button>}</div>
+                <div className="max-h-80 overflow-y-auto">{notifications.map((notification)=><button key={notification.id} onClick={()=>openNotification(notification)} className={`block w-full border-b border-[#f0e8d5] p-4 text-left transition hover:bg-mist/60 dark:border-white/5 dark:hover:bg-white/5 ${notification.read_at?'opacity-60':'bg-[#fffaf0] dark:bg-white/5'}`}><span className="flex items-start gap-3"><span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${notification.read_at?'bg-black/15':'bg-gold'}`}/><span><b className="block text-sm">{notification.title}</b><span className="mt-1 block text-xs leading-5 text-black/55 dark:text-white/55">{notification.message}</span><span className="mt-2 block text-[9px] text-black/35 dark:text-white/35">{new Date(notification.created_at).toLocaleString('fr-FR')}</span></span></span></button>)}{!notifications.length&&<p className="p-8 text-center text-xs text-black/45 dark:text-white/45">Aucune notification pour le moment.</p>}</div>
+                {notificationPermission==='default'&&<button onClick={enableBrowserNotifications} className="w-full border-t border-[#eadfc5] p-3 text-xs font-semibold text-gold dark:border-white/10">Activer les alertes du navigateur</button>}
+              </div>}
+            </div>
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#d7b65e] to-[#B38A2C] font-display text-xs font-bold text-white shadow-md">TK</div>
           </div>
         </header>

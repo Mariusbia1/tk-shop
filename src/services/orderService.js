@@ -1,9 +1,9 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
-export async function createOrder(form, items) {
+export async function createOrder(form, items, paymentMethod = 'whatsapp') {
   if (!isSupabaseConfigured) return null
 
-  const { data, error } = await supabase.rpc('create_secure_order', {
+  const { data, error } = await supabase.rpc('create_order_with_payment', {
     payload: {
       customer: {
         name: form.name,
@@ -12,6 +12,7 @@ export async function createOrder(form, items) {
         address: form.address,
         delivery: form.delivery,
         comment: form.comment || '',
+        payment_method: paymentMethod,
       },
       items: items.map((item) => ({
         product_id: Number(item.id),

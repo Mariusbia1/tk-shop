@@ -216,12 +216,7 @@ export async function saveCategory(category) {
 }
 
 export async function updateOrderStatus(id, status) {
-  const { data, error } = await supabase
-    .from('orders')
-    .update({ status })
-    .eq('id', id)
-    .select()
-    .single()
+  const { data, error } = await supabase.rpc('update_order_status_with_revenue', { p_order_id: id, p_status: status })
   if (error) throw error
   return data
 }
@@ -371,7 +366,7 @@ export async function getDashboardData() {
       orders: ordersResult.length,
       pending: activeOrders.length,
       revenue: ordersResult
-        .filter((order) => order.status !== 'cancelled')
+        .filter((order) => order.status === 'delivered')
         .reduce((total, order) => total + Number(order.total || 0), 0),
     },
   }
@@ -452,4 +447,9 @@ export async function getAuditLogs() {
     throw error
   }
   return data
+}
+
+export async function clearAuditLogs() {
+  const { error } = await supabase.rpc('clear_admin_audit_logs')
+  if (error) throw error
 }
