@@ -93,6 +93,9 @@ export default function CheckoutPage() {
           public_key: key,
           environment: import.meta.env.VITE_FEDAPAY_ENVIRONMENT || 'sandbox',
           locale: 'fr',
+          currency: {
+            iso: 'XOF'
+          },
           transaction: {
             amount: secureDeposit,
             description: `Acompte commande TK SHOP ${order?.order_number || ''}`.trim(),
