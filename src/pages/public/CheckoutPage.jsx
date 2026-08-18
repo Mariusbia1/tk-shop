@@ -14,35 +14,32 @@ import ProductMediaThumb from '../../components/products/ProductMediaThumb'
 
 const initial = { name: '', email: '', phone: '', city: '', address: '', delivery: '', comment: '', paymentMethod: 'whatsapp', terms: false }
 const loadFedaPaySDK = () => {
-  if (typeof window !== 'undefined' && window.FedaPay) {
-    return Promise.resolve(window.FedaPay)
-  }
   return new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-fedapay-checkout]')
-    if (existing) {
-      if (window.FedaPay) return resolve(window.FedaPay)
-      existing.addEventListener('load', () => {
-        if (window.FedaPay) resolve(window.FedaPay)
-        else reject(new Error('FedaPay SDK introuvable.'))
-      })
-      existing.addEventListener('error', () => reject(new Error('Impossible de charger le module FedaPay.')))
-      setTimeout(() => {
-        if (window.FedaPay) resolve(window.FedaPay)
-        else reject(new Error('Délai d’attente dépassé pour charger FedaPay.'))
-      }, 3000)
-      return
+    if (typeof window !== 'undefined' && window.FedaPay) {
+      return resolve(window.FedaPay)
     }
 
-    const script = document.createElement('script')
-    script.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
-    script.async = true
-    script.dataset.fedapayCheckout = 'true'
-    script.onload = () => {
-      if (window.FedaPay) resolve(window.FedaPay)
-      else reject(new Error('FedaPay SDK non initialisé.'))
+    if (typeof document !== 'undefined' && !document.querySelector('script[data-fedapay-checkout]')) {
+      const script = document.createElement('script')
+      script.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
+      script.async = true
+      script.dataset.fedapayCheckout = 'true'
+      document.head.appendChild(script)
     }
-    script.onerror = () => reject(new Error('Impossible de contacter les serveurs de paiement FedaPay.'))
-    document.head.appendChild(script)
+
+    let attempts = 0
+    const maxAttempts = 80 // 8 secondes
+    const interval = setInterval(() => {
+      attempts++
+      if (typeof window !== 'undefined' && window.FedaPay) {
+        clearInterval(interval)
+        return resolve(window.FedaPay)
+      }
+      if (attempts >= maxAttempts) {
+        clearInterval(interval)
+        return reject(new Error('Impossible de joindre le service FedaPay. Vérifiez votre connexion internet ou vos bloqueurs de publicité.'))
+      }
+    }, 100)
   })
 }
 
