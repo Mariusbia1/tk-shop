@@ -13,24 +13,49 @@ import PhoneInput from '../../components/common/PhoneInput'
 import ProductMediaThumb from '../../components/products/ProductMediaThumb'
 
 const initial = { name: '', email: '', phone: '', city: '', address: '', delivery: '', comment: '', paymentMethod: 'whatsapp', terms: false }
+const loadFedaPaySDK = () => {
+  if (typeof window !== 'undefined' && window.FedaPay) {
+    return Promise.resolve(window.FedaPay)
+  }
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-fedapay-checkout]')
+    if (existing) {
+      if (window.FedaPay) return resolve(window.FedaPay)
+      existing.addEventListener('load', () => {
+        if (window.FedaPay) resolve(window.FedaPay)
+        else reject(new Error('FedaPay SDK introuvable.'))
+      })
+      existing.addEventListener('error', () => reject(new Error('Impossible de charger le module FedaPay.')))
+      setTimeout(() => {
+        if (window.FedaPay) resolve(window.FedaPay)
+        else reject(new Error('Délai d’attente dépassé pour charger FedaPay.'))
+      }, 3000)
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
+    script.async = true
+    script.dataset.fedapayCheckout = 'true'
+    script.onload = () => {
+      if (window.FedaPay) resolve(window.FedaPay)
+      else reject(new Error('FedaPay SDK non initialisé.'))
+    }
+    script.onerror = () => reject(new Error('Impossible de contacter les serveurs de paiement FedaPay.'))
+    document.head.appendChild(script)
+  })
+}
+
 export default function CheckoutPage() {
   const { items, subtotal, deliveryFee, total, clearCart } = useCart()
   const { settings } = useCatalog()
   const [form, setForm] = useState(initial)
   const [submitting, setSubmitting] = useState(false)
-  const [fedapayReady, setFedapayReady] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (form.paymentMethod !== 'fedapay' || document.querySelector('script[data-fedapay-checkout]')) return
-    const script = document.createElement('script')
-    script.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
-    script.async = true
-    script.dataset.fedapayCheckout = 'true'
-    script.onload = () => setFedapayReady(true)
-    script.onerror = () => toast.error('Impossible de charger le module de paiement FedaPay.')
-    document.head.appendChild(script)
-  }, [form.paymentMethod])
+    loadFedaPaySDK().catch(() => {})
+  }, [])
 
   if (!items.length) return <Navigate to="/panier" replace />
 
@@ -46,6 +71,11 @@ export default function CheckoutPage() {
     
     setSubmitting(true)
     try {
+      if (form.paymentMethod === 'fedapay') {
+        const key = import.meta.env.VITE_FEDAPAY_PUBLIC_KEY
+        if (!key) throw new Error('La clé publique FedaPay n’est pas configurée dans les variables d’environnement.')
+      }
+
       const order = await createOrder(form, items, form.paymentMethod)
       const secureTotal = order?.total ?? total
       const secureDeposit = order?.deposit_amount ?? Math.ceil(secureTotal / 2)
@@ -53,10 +83,9 @@ export default function CheckoutPage() {
 
       if (form.paymentMethod === 'fedapay') {
         const key = import.meta.env.VITE_FEDAPAY_PUBLIC_KEY
-        if (!key) throw new Error('La clé publique FedaPay n’est pas configurée dans les variables d’environnement.')
-        if (!window.FedaPay || !fedapayReady) throw new Error('Le module FedaPay est en cours de chargement. Veuillez patienter un instant.')
+        const FedaPay = await loadFedaPaySDK()
 
-        const widget = window.FedaPay.init({
+        const widget = FedaPay.init({
           public_key: key,
           environment: import.meta.env.VITE_FEDAPAY_ENVIRONMENT || 'sandbox',
           locale: 'fr',
@@ -75,7 +104,7 @@ export default function CheckoutPage() {
             }
           },
           onComplete: (reason) => {
-            if (reason === window.FedaPay.CHECKOUT_COMPLETED || reason?.status === 'approved') {
+            if (reason === FedaPay.CHECKOUT_COMPLETED || reason?.status === 'approved') {
               clearCart()
               sessionStorage.setItem('tk-shop-last-order', JSON.stringify({
                 form,
