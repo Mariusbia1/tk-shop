@@ -21,14 +21,21 @@ const loadFedaPaySDK = () => {
 
     if (typeof document !== 'undefined' && !document.querySelector('script[data-fedapay-checkout]')) {
       const script = document.createElement('script')
-      script.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
+      script.src = '/fedapay-checkout.js'
       script.async = true
       script.dataset.fedapayCheckout = 'true'
+      script.onerror = () => {
+        const cdnScript = document.createElement('script')
+        cdnScript.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
+        cdnScript.async = true
+        cdnScript.dataset.fedapayCheckout = 'true'
+        document.head.appendChild(cdnScript)
+      }
       document.head.appendChild(script)
     }
 
     let attempts = 0
-    const maxAttempts = 80 // 8 secondes
+    const maxAttempts = 100 // 10 secondes
     const interval = setInterval(() => {
       attempts++
       if (typeof window !== 'undefined' && window.FedaPay) {
@@ -37,7 +44,7 @@ const loadFedaPaySDK = () => {
       }
       if (attempts >= maxAttempts) {
         clearInterval(interval)
-        return reject(new Error('Impossible de joindre le service FedaPay. Vérifiez votre connexion internet ou vos bloqueurs de publicité.'))
+        return reject(new Error('Impossible de joindre le service FedaPay. Vérifiez votre connexion internet.'))
       }
     }, 100)
   })
