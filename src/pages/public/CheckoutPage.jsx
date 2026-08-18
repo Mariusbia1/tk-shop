@@ -14,6 +14,9 @@ import ProductMediaThumb from '../../components/products/ProductMediaThumb'
 
 const initial = { name: '', email: '', phone: '', city: '', address: '', delivery: '', comment: '', paymentMethod: 'whatsapp', terms: false }
 const loadFedaPaySDK = () => {
+  if (typeof window !== 'undefined' && window.FedaPay) {
+    return Promise.resolve(window.FedaPay)
+  }
   return new Promise((resolve, reject) => {
     if (typeof window !== 'undefined' && window.FedaPay) {
       return resolve(window.FedaPay)
@@ -24,18 +27,24 @@ const loadFedaPaySDK = () => {
       script.src = '/fedapay-checkout.js'
       script.async = true
       script.dataset.fedapayCheckout = 'true'
+      script.onload = () => {
+        if (window.FedaPay) resolve(window.FedaPay)
+      }
       script.onerror = () => {
         const cdnScript = document.createElement('script')
         cdnScript.src = 'https://cdn.fedapay.com/checkout.js?v=1.1.7'
         cdnScript.async = true
         cdnScript.dataset.fedapayCheckout = 'true'
+        cdnScript.onload = () => {
+          if (window.FedaPay) resolve(window.FedaPay)
+        }
         document.head.appendChild(cdnScript)
       }
       document.head.appendChild(script)
     }
 
     let attempts = 0
-    const maxAttempts = 100 // 10 secondes
+    const maxAttempts = 50 // 5 secondes
     const interval = setInterval(() => {
       attempts++
       if (typeof window !== 'undefined' && window.FedaPay) {
@@ -46,7 +55,7 @@ const loadFedaPaySDK = () => {
         clearInterval(interval)
         return reject(new Error('Impossible de joindre le service FedaPay. Vérifiez votre connexion internet.'))
       }
-    }, 100)
+    }, 50)
   })
 }
 
