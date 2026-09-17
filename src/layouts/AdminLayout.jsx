@@ -7,6 +7,7 @@ import {
 import { useAdminAuth } from '../contexts/AdminAuthContext'
 import InstallAppButton from '../components/common/InstallAppButton'
 import toast from 'react-hot-toast'
+import SEO from '../components/common/SEO'
 import { supabase } from '../lib/supabase'
 import { getNotifications, markAllNotificationsRead, markNotificationRead } from '../services/notificationService'
 
@@ -144,6 +145,7 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-shell min-h-screen bg-[#faf5ea] text-ink dark:bg-[#17140f]">
+      <SEO title={`${current} | Administration TK SHOP`} noindex={true} />
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[272px] flex-col overflow-y-auto bg-gradient-to-b from-[#302712] via-[#241d0e] to-[#171109] lg:flex">
         <SidebarContent />
       </aside>

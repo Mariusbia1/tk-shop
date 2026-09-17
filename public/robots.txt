@@ -1,0 +1,15 @@
+# Robots.txt for TK SHOP
+# https://tkshop-crochet.com
+
+User-agent: *
+Allow: /
+
+# Private & checkout routes (do not index)
+Disallow: /admin
+Disallow: /admin/
+Disallow: /commande
+Disallow: /commande/
+Disallow: /panier
+
+# Search Engine Sitemap
+Sitemap: https://tkshop-crochet.com/sitemap.xml

@@ -229,7 +229,7 @@
   .dark .border-black\/5,
   .dark .border-black\/15,
   .dark .border-black\/20 { border-color: rgb(255 255 255 / .14); }
-  .dark input,
+  .dark input:not([type="radio"]):not([type="checkbox"]),
   .dark textarea,
   .dark select { color: #fffdf7; background-color: #252014; }
 
@@ -282,6 +282,17 @@
   .dark input[type="file"]:hover::file-selector-button {
     border-color: #caa64b;
     background: #493b21;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: #b38a2c;
+    cursor: pointer;
+    width: 1.15rem;
+    height: 1.15rem;
+    min-width: 18px;
+    min-height: 18px;
+    vertical-align: middle;
   }
 
   .dark input[type="checkbox"],

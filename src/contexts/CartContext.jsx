@@ -36,8 +36,8 @@ export function CartProvider({ children }) {
   const clearCart = () => setItems([])
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const deliveryFee = items.length ? Number(settings?.delivery_fee ?? siteConfig.deliveryFee) : 0
-  const total = subtotal + deliveryFee
+  const deliveryFee = 0
+  const total = subtotal
   const value = useMemo(() => ({ items, addItem, updateQuantity, removeItem, clearCart, itemCount, subtotal, deliveryFee, total }), [items, itemCount, subtotal, deliveryFee, total])
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

@@ -54,7 +54,32 @@ export default function ProductPage() {
   }
   const media=product.media?.length?product.media:product.images.map((url,index)=>({id:`image-${index}`,url,type:'image'}))
   const activeMedia=media[activeImage]||media[0]
-  return <><SEO title={`${product.name} | TK SHOP`} /><div className="mx-auto max-w-7xl px-5 py-8 lg:px-8"><nav className="mb-8 text-xs text-black/50"><Link to="/">Accueil</Link> / <Link to="/collections">Collection</Link> / {product.name}</nav>
+  const breadcrumbs = [
+    { name: 'Accueil', url: '/' },
+    { name: 'Collection', url: '/collections' },
+    { name: product.category, url: `/categories/${product.categorySlug}` },
+    { name: product.name, url: `/collections/${product.slug}` },
+  ]
+
+  return <>
+    <SEO
+      title={`${product.name} | Création en Crochet | TK SHOP`}
+      description={`${product.name} — ${product.shortDescription || product.description} Confectionné à la main avec soin par TK SHOP. ${formatCurrency(product.price)}.`}
+      image={product.images?.[0]}
+      path={`/collections/${product.slug}`}
+      type="product"
+      product={product}
+      breadcrumbs={breadcrumbs}
+      keywords={[
+        product.name,
+        product.category,
+        'crochet fait main',
+        'création crochet',
+        'pièce unique crochet',
+        'sur mesure crochet',
+      ]}
+    />
+    <div className="mx-auto max-w-7xl px-5 py-8 lg:px-8"><nav className="mb-8 text-xs text-black/50"><Link to="/">Accueil</Link> / <Link to="/collections">Collection</Link> / {product.name}</nav>
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-16"><div><div className="aspect-[4/5] overflow-hidden bg-mist">{activeMedia?.type==='video'?<video key={activeMedia.url} src={activeMedia.url} controls playsInline preload="metadata" className="h-full w-full bg-black object-contain">Votre navigateur ne prend pas en charge cette vidéo.</video>:<img src={activeMedia?.url} alt={product.name} className="h-full w-full object-cover" />}</div><div className="mt-3 flex gap-3 overflow-x-auto pb-2">{media.map((item,i)=><button key={item.id||item.url} onClick={()=>setActiveImage(i)} className={`relative h-24 w-20 shrink-0 overflow-hidden border-2 ${activeImage===i?'border-gold':'border-transparent'}`}>{item.type==='video'?<><video src={item.url} muted playsInline preload="metadata" className="h-full w-full bg-black object-cover"/><span className="absolute inset-0 grid place-items-center bg-black/25 text-xs font-bold text-white">VIDÉO</span></>:<img src={item.url} alt={`${product.name}, vue ${i+1}`} className="h-full w-full object-cover" />}</button>)}</div></div>
     <div className="lg:py-6"><p className="text-xs font-bold uppercase tracking-[.2em] text-gold">{product.category}</p><h1 className="mt-3 font-display text-4xl md:text-5xl">{product.name}</h1><div className="mt-4 flex flex-wrap items-center gap-3"><p className="text-xl font-semibold">{formatCurrency(product.price)}</p><span className="rounded-full bg-mist px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gold">{product.stockStatus === 'Disponible' ? 'Disponible immédiatement' : product.stockStatus}</span></div><p className="mt-6 leading-8 text-black/60">{product.description}</p>
       {product.colors.length>0&&<fieldset className="mt-8"><legend className="mb-3 text-sm font-bold">Couleurs <span className="font-normal text-black/45">— 1 couleur = 1 article</span></legend><div className="flex flex-wrap gap-2">{product.colors.map(c=><button type="button" aria-pressed={colors.includes(c)} key={c} onClick={()=>toggleColor(c)} className={`border px-4 py-2 text-sm ${colors.includes(c)?'border-ink bg-ink text-white':'border-black/20'}`}>{c}</button>)}</div>{colors.length>0&&<p className="mt-2 text-xs text-gold">{colors.length} article{colors.length>1?'s':''} : {colors.join(' · ')}</p>}</fieldset>}

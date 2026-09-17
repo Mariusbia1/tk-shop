@@ -350,6 +350,28 @@ export async function updateAdminEmail(email) {
   return data.user
 }
 
+export async function updateOrderPayment(id, { paymentStatus, depositAmount, remainingAmount }) {
+  const payload = {
+    payment_status: paymentStatus,
+    updated_at: new Date().toISOString(),
+  }
+  if (depositAmount !== undefined) payload.deposit_amount = depositAmount
+  if (remainingAmount !== undefined) payload.remaining_amount = remainingAmount
+  if (paymentStatus === 'paid') {
+    payload.completed_at = new Date().toISOString()
+    payload.remaining_amount = 0
+  }
+  const { data, error } = await supabase
+    .from('orders')
+    .update(payload)
+    .eq('id', id)
+    .select('*, order_items(*)')
+    .single()
+  if (error) throw error
+  notifyCatalogChanged()
+  return data
+}
+
 export async function getDashboardData() {
   const [productsResult, categoriesResult, ordersResult] = await Promise.all([
     getProducts({ includeDrafts: true }),
@@ -357,6 +379,23 @@ export async function getDashboardData() {
     getAdminOrders(),
   ])
   const activeOrders = ordersResult.filter((order) => !['delivered', 'cancelled'].includes(order.status))
+  const validOrders = ordersResult.filter((order) => order.status !== 'cancelled')
+
+  const totalRevenue = validOrders.reduce((sum, o) => sum + Number(o.total || 0), 0)
+  const collectedRevenue = validOrders.reduce((sum, o) => {
+    if (o.payment_status === 'paid' || o.status === 'delivered') {
+      return sum + Number(o.total || 0)
+    }
+    if (o.payment_status === 'partially_paid') {
+      return sum + Number(o.deposit_amount || Math.ceil((o.total || 0) / 2))
+    }
+    return sum
+  }, 0)
+  const pendingCollection = Math.max(0, totalRevenue - collectedRevenue)
+
+  const fedapayOrders = validOrders.filter((o) => o.payment_method === 'fedapay')
+  const whatsappOrders = validOrders.filter((o) => o.payment_method !== 'fedapay')
+
   return {
     products: productsResult,
     categories: categoriesResult,
@@ -365,9 +404,13 @@ export async function getDashboardData() {
       products: productsResult.length,
       orders: ordersResult.length,
       pending: activeOrders.length,
-      revenue: ordersResult
-        .filter((order) => order.status === 'delivered')
-        .reduce((total, order) => total + Number(order.total || 0), 0),
+      revenue: totalRevenue,
+      collected: collectedRevenue,
+      remaining: pendingCollection,
+      fedapayOrdersCount: fedapayOrders.length,
+      whatsappOrdersCount: whatsappOrders.length,
+      fedapayTotal: fedapayOrders.reduce((sum, o) => sum + Number(o.total || 0), 0),
+      whatsappTotal: whatsappOrders.reduce((sum, o) => sum + Number(o.total || 0), 0),
     },
   }
 }

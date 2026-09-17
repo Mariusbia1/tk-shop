@@ -19,7 +19,50 @@ export default function HomePage() {
   const story = content.homeStory || {}
   const faqCopy = content.homeFaq || {}
   const cta = content.homeCta || {}
-  return <><SEO title="TK SHOP | Créations crochetées à la main" />
+  const homeSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ClothingStore',
+      name: 'TK SHOP',
+      alternateName: 'Taye & Kinde Shop',
+      description: 'Atelier de création artisanale de pièces uniques et sur-mesure au crochet : robes, ensembles, sacs et accessoires.',
+      url: 'https://tkshop-crochet.com',
+      logo: 'https://tkshop-crochet.com/app-icon-512.png',
+      image: 'https://tkshop-crochet.com/assets/hero-crochet-gold.jpg',
+      priceRange: '$$',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Cotonou',
+        addressCountry: 'BJ',
+      },
+      sameAs: [
+        'https://www.tiktok.com/@tkshop',
+        'https://instagram.com',
+        'https://facebook.com',
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'TK SHOP',
+      url: 'https://tkshop-crochet.com',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://tkshop-crochet.com/collections?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ]
+
+  return <>
+    <SEO
+      title="TK SHOP | Créations crochetées à la main | Robes & Ensembles Crochet"
+      description="TK SHOP imagine et confectionne des pièces d'exception en crochet faites à la main. Robes, ensembles, sacs et créations sur mesure. Confection artisanale et livraison au Bénin & international."
+      keywords={['TK SHOP', 'crochet fait main', 'crochet d’exception', 'robes au crochet', 'ensembles crochet', 'sacs crochet', 'artisanat Cotonou', 'créatrice crochet']}
+      path="/"
+      faq={faq}
+      schema={homeSchema}
+    />
     <section className="relative min-h-[82vh] overflow-hidden bg-gradient-to-br from-[#fffcf5] via-linen to-[#ebdbb4] dark:from-plum dark:via-[#3b2e14] dark:to-[#20190d]">
       <div className="absolute -left-24 top-16 h-72 w-72 rounded-full bg-[#cfa746]/35 blur-3xl" />
       <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#dfc57f]/55 blur-3xl" />
