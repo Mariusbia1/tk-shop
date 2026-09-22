@@ -42,7 +42,7 @@ set search_path = public
 as $$
 begin
   if not public.is_admin() then raise exception 'Accès administrateur requis.'; end if;
-  delete from public.admin_audit_logs;
+  delete from public.admin_audit_logs where id >= 0;
 end;
 $$;
 revoke all on function public.clear_admin_audit_logs() from public;

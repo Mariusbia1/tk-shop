@@ -493,6 +493,16 @@ export async function getAuditLogs() {
 }
 
 export async function clearAuditLogs() {
-  const { error } = await supabase.rpc('clear_admin_audit_logs')
-  if (error) throw error
+  const { error: rpcError } = await supabase.rpc('clear_admin_audit_logs')
+  if (!rpcError) return
+
+  const { error: directError } = await supabase
+    .from('admin_audit_logs')
+    .delete()
+    .gte('id', 0)
+
+  if (directError) {
+    throw new Error(rpcError?.message || directError?.message)
+  }
 }
+
